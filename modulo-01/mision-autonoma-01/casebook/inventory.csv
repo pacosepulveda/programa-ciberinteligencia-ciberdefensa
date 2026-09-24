@@ -1,0 +1,4 @@
+asset_id,hostname,role,network,documented_services,owner,status,last_review
+A-001,KALI01,Security analysis workstation,10.20.0.0/24,Analyst tools,Security Lab,Active,2026-09-18
+A-002,LINUX01,Web validation server,10.20.0.0/24,HTTP/TCP-80,Platform Operations,Active,2026-09-18
+A-003,AD01,Directory services,TELVORA-M01,DNS;Kerberos;LDAP;SMB,Identity Services,Active,2026-09-12

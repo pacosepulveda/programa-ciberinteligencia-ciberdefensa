@@ -1,0 +1,22 @@
+From: Marta Ríos, Responsable de Seguridad
+To: Analista MA01
+Subject: Validación de exposición — LINUX01 / TELVORA-M01
+
+Necesito una revisión breve y defendible antes de que demos por cerrado el inventario del entorno.
+
+No busques “vulnerabilidades” por volumen. Quiero saber si lo que está realmente accesible coincide con lo documentado y qué significa la diferencia, si existe.
+
+Trabaja únicamente sobre el cyber range. No explotes servicios ni realices ataques de contraseña.
+
+Necesito al final:
+- hallazgos confirmados;
+- evidencias reproducibles;
+- hipótesis alternativas;
+- nivel de confianza;
+- riesgo que merece atención;
+- acciones inmediatas proporcionadas;
+- preguntas que todavía debemos responder.
+
+Si encuentras un servicio no documentado, no asumas que es malicioso ni innecesario. Determina qué sabemos, qué inferimos y qué debemos validar.
+
+— Marta

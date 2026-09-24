@@ -1,0 +1,23 @@
+CHANGE REQUEST: CR-M01-042
+Status: CLOSED
+Requested by: Platform Operations
+System: LINUX01
+Environment: Telvora Cyber Range
+Date opened: 2026-09-19
+Date closed: 2026-09-20
+
+Business purpose:
+Validate the default web service used by the Telvora lab scenario.
+
+Requested network exposure:
+- TCP/80 to LINUX01 from the TELVORA-M01 laboratory segment.
+
+Validation:
+- Nginx service reachable from the laboratory segment.
+- Default landing page returned successfully.
+
+Rollback:
+- Stop Nginx if validation fails.
+
+Notes:
+The request documents the web validation requirement. It does not state whether any additional administrative service is required after provisioning.

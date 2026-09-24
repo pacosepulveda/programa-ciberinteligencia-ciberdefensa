@@ -1,0 +1,6 @@
+timestamp,source,event,confidence
+2026-09-18T10:22:00+02:00,Asset Management,Exportación del inventario usado en el Casebook,Alta
+2026-09-20T16:34:00+02:00,Change Management,CR-M01-042 cerrado tras validación del servicio HTTP de LINUX01,Alta
+2026-09-22T09:14:13+02:00,Nginx,Petición HTTP GET / recibida por LINUX01,Alta
+2026-09-22T09:17:04+02:00,Authentication,Inicio de sesión SSH aceptado para cuenta student desde el segmento de laboratorio,Alta
+2026-09-22T11:30:00+02:00,Security,Se solicita revisión de coherencia entre inventario y exposición real,Alta

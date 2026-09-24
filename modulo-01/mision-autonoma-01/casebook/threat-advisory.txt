@@ -1,0 +1,18 @@
+TELVORA CTI NOTE — REMOTE ADMINISTRATION EXPOSURE
+Classification: Training scenario / internal use
+
+Assessment:
+Remote administration services represent privileged access paths and should be explicitly owned, justified and constrained. An exposed administration service can increase attack surface, particularly when credentials, sessions or administrative endpoints become a target.
+
+Analytic caution:
+- The presence of an SSH service is not evidence that the service is vulnerable.
+- The presence of an SSH service is not evidence of compromise.
+- Priority depends on reachability, business need, authentication controls, privileges, monitoring and the assets reachable after authentication.
+- An undocumented exposure is first a governance and assurance gap that requires validation.
+
+Questions that can change the decision:
+1. Is remote administration still operationally required?
+2. From which sources should it be reachable?
+3. Which identities are authorized?
+4. Which authentication and monitoring controls are enforced?
+5. Is the service represented correctly in the asset inventory?

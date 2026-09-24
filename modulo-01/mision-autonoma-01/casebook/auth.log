@@ -1,0 +1,4 @@
+2026-09-22T09:16:58+02:00 linux01 sshd[1834]: Connection from 10.20.0.10 port 51462 on 10.20.0.20 port 22
+2026-09-22T09:17:04+02:00 linux01 sshd[1834]: Accepted password for student from 10.20.0.10 port 51462 ssh2
+2026-09-22T09:17:04+02:00 linux01 sshd[1834]: pam_unix(sshd:session): session opened for user student(uid=1000) by (uid=0)
+2026-09-22T09:19:41+02:00 linux01 sshd[1834]: pam_unix(sshd:session): session closed for user student
