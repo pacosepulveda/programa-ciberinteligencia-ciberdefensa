@@ -16,8 +16,6 @@ modulo-02/
 └── laboratorios/
 ```
 
-Cada módulo contiene únicamente el material destinado al alumno. Las guías de instructor, soluciones y materiales internos no forman parte de este repositorio.
-
 ## Contenido disponible
 
 ### Módulo 1 — Fundamentos de Ciberseguridad, Ciberinteligencia y Ciberdefensa
