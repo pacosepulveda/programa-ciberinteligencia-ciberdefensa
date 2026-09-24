@@ -5,8 +5,8 @@
 **Empresa ficticia:** Telvora Communications (TELVORA)  
 **Entorno:** Telvora Cyber Range  
 **Módulo:** M02  
-**Prácticas:** P02.1, P02.2 y P02.3  
-**Versión:** 1.0 — septiembre de 2026
+**Prácticas:** P02.1 y P02.2  
+**Versión:** 1.1 — septiembre de 2026
 
 ---
 
@@ -50,9 +50,7 @@ Al finalizar el módulo el alumno deberá ser capaz de:
 - aplicar una aproximación cualitativa inspirada en MAGERIT;
 - utilizar conceptos de Open FAIR para expresar riesgo en términos económicos;
 - distinguir riesgo inherente, riesgo residual y apetito/tolerancia al riesgo;
-- elaborar un Business Impact Analysis (BIA);
-- definir MTPD, RTO y RPO coherentes;
-- seleccionar estrategias de continuidad justificadas por impacto y coste;
+- relacionar RTO, RPO y continuidad con decisiones de recuperación durante un incidente;
 - tomar decisiones durante una crisis con información incompleta;
 - documentar decisiones, hipótesis y niveles de confianza;
 - conectar gobierno, gestión de riesgos, continuidad y respuesta a incidentes.
@@ -501,256 +499,7 @@ Responde:
 
 ---
 
-# P02.2 — Continuity Under Pressure
-## Business Impact Analysis y estrategia de recuperación
-
----
-
-## 1. Escenario
-
-El comité ejecutivo solicita revisar la continuidad de cuatro servicios.
-
-La organización dispone de recursos limitados. No puede implementar active-active en todo.
-
-Debes decidir:
-
-> **¿Qué debe recuperarse primero, en cuánto tiempo y con qué nivel de pérdida de datos aceptable?**
-
----
-
-# 2. Procesos y dependencias
-
-## S1 — Autenticación corporativa
-
-Depende de:
-
-- `IDP01`;
-- DNS interno;
-- conectividad.
-
-Si falla:
-
-- administradores no pueden acceder a determinados sistemas;
-- usuarios pueden perder acceso a SaaS;
-- VPN puede verse afectada.
-
-## S2 — Portal de clientes
-
-Depende de:
-
-- DNS;
-- frontend;
-- `IDP01`;
-- `CRM01`.
-
-## S3 — Atención al cliente
-
-Depende de:
-
-- CRM01;
-- telefonía;
-- identidad corporativa.
-
-## S4 — Facturación
-
-Depende de:
-
-- CRM01;
-- motor de facturación;
-- almacenamiento;
-- procesos batch.
-
----
-
-# 3. Impacto temporal
-
-Para cada servicio valora el impacto a:
-
-- 1 hora;
-- 4 horas;
-- 8 horas;
-- 24 horas;
-- 72 horas.
-
-Escala:
-
-| Valor | Descripción |
-|---:|---|
-| 1 | Menor |
-| 2 | Moderado |
-| 3 | Significativo |
-| 4 | Grave |
-| 5 | Crítico |
-
-Completa:
-
-| Servicio | 1 h | 4 h | 8 h | 24 h | 72 h |
-|---|---:|---:|---:|---:|---:|
-| S1 Identidad | | | | | |
-| S2 Portal | | | | | |
-| S3 Atención cliente | | | | | |
-| S4 Facturación | | | | | |
-
----
-
-# 4. Definiciones
-
-Para cada servicio establece:
-
-### MTPD — Maximum Tolerable Period of Disruption
-
-Tiempo máximo que la organización puede tolerar la interrupción antes de que el impacto sea inaceptable.
-
-### RTO — Recovery Time Objective
-
-Objetivo máximo de tiempo para recuperar el servicio.
-
-Debe cumplirse normalmente:
-
-```text
-RTO < MTPD
-```
-
-### RPO — Recovery Point Objective
-
-Máxima pérdida de datos temporal aceptable.
-
----
-
-# 5. Define MTPD, RTO y RPO
-
-Completa:
-
-| Servicio | MTPD | RTO | RPO | Justificación |
-|---|---|---|---|---|
-| S1 Identidad | | | | |
-| S2 Portal | | | | |
-| S3 Atención | | | | |
-| S4 Facturación | | | | |
-
-Comprueba que tus valores no son contradictorios.
-
----
-
-# 6. Estrategias disponibles
-
-TELVORA puede financiar un máximo de **450.000 €** para las siguientes mejoras durante el próximo ejercicio.
-
-### E1 — Identidad redundante
-
-Coste:
-
-```text
-180.000 €
-```
-
-Efecto esperado:
-
-- RTO de identidad: 1 hora;
-- RPO: 15 minutos.
-
-### E2 — Portal active-passive automatizado
-
-Coste:
-
-```text
-140.000 €
-```
-
-Efecto:
-
-- RTO portal: 2 horas;
-- RPO: 30 minutos.
-
-### E3 — Replicación CRM
-
-Coste:
-
-```text
-220.000 €
-```
-
-Efecto:
-
-- RTO CRM: 2 horas;
-- RPO: 30 minutos.
-
-### E4 — Backups inmutables + restauración probada
-
-Coste:
-
-```text
-120.000 €
-```
-
-Efecto:
-
-- reduce la probabilidad de pérdida simultánea de producción y backup;
-- RTO de recuperación ante ransomware: 8 horas;
-- RPO: 24 horas.
-
-### E5 — Segundo proveedor DNS
-
-Coste:
-
-```text
-90.000 €
-```
-
-Efecto:
-
-- reduce dependencia de DNS;
-- RTO ante fallo del proveedor principal: 30 minutos.
-
-### E6 — Procedimiento manual de facturación diferida
-
-Coste:
-
-```text
-35.000 €
-```
-
-Efecto:
-
-- no recupera el sistema;
-- permite operar de manera degradada durante un máximo de 72 horas.
-
----
-
-# 7. Selección
-
-Selecciona una combinación que no supere:
-
-```text
-450.000 €
-```
-
-Debes justificarla en función de:
-
-- BIA;
-- dependencias;
-- riesgo;
-- coste;
-- efecto en RTO/RPO;
-- riesgo residual.
-
-No se evalúa únicamente “comprar el máximo”.
-
----
-
-# 8. Prueba de coherencia
-
-Responde:
-
-1. ¿Una copia diaria puede cumplir un RPO de 30 minutos?
-2. ¿Un RTO de 8 horas es válido si el MTPD es 4 horas?
-3. ¿Un procedimiento manual puede ser una estrategia de continuidad válida?
-4. ¿Redundancia equivale a backup?
-5. ¿Alta disponibilidad sustituye a la recuperación ante ransomware?
-
----
-
-# P02.3 — Telvora Crisis Tabletop
+# P02.2 — Telvora Crisis Tabletop
 ## Decisiones de ciberdefensa bajo incertidumbre
 
 ---
@@ -963,13 +712,6 @@ Describe qué riesgo seguiría existiendo incluso después de implantar las mejo
 
 ## P02.2
 
-- matriz de impacto temporal;
-- MTPD/RTO/RPO;
-- combinación de estrategias ≤ 450.000 €;
-- justificación y riesgo residual.
-
-## P02.3
-
 - registro de decisiones de los cinco injects;
 - línea temporal;
 - After Action Review.
@@ -984,11 +726,10 @@ Describe qué riesgo seguiría existiendo incluso después de implantar las mejo
 | Calidad de los escenarios de riesgo | 10 % |
 | Evaluación cualitativa | 10 % |
 | Cuantificación FAIR simplificada | 15 % |
-| Decisión de tratamiento | 10 % |
-| BIA, MTPD, RTO y RPO | 15 % |
-| Estrategia de continuidad | 10 % |
-| Decisiones durante la crisis | 15 % |
-| Gestión de incertidumbre y calidad documental | 5 % |
+| Decisión de tratamiento y riesgo residual | 15 % |
+| Decisiones durante la crisis | 20 % |
+| Gestión de incertidumbre y evidencia | 10 % |
+| Decision log y After Action Review | 10 % |
 
 ---
 
@@ -997,7 +738,8 @@ Describe qué riesgo seguiría existiendo incluso después de implantar las mejo
 - Una matriz no es el riesgo.
 - El riesgo necesita un escenario.
 - “Crítico” sin justificación no es análisis.
-- El valor de un activo incluye sus dependencias.- RTO y RPO no son deseos: deben estar soportados por arquitectura y procedimientos.
+- El valor de un activo incluye sus dependencias.
+- RTO y RPO no son deseos: deben estar soportados por arquitectura y procedimientos.
 - Alta disponibilidad, backup y continuidad resuelven problemas diferentes.
 - Un control reduce riesgo; rara vez lo elimina.
 - Una decisión de crisis debe poder explicarse con la información disponible en ese momento.
