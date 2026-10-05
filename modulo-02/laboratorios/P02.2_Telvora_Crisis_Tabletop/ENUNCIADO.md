@@ -230,7 +230,7 @@ No es necesario entregar un documento adicional salvo que el instructor lo indiq
 
 Las instrucciones de acceso están disponibles en:
 
-[M02_P02.2_Acceso_Tabletop.md](M02_P02.2_Acceso_Tabletop.md)
+[Acceso a la aplicación](ACCESO_APLICACION.md)
 
 Aplicación:
 
