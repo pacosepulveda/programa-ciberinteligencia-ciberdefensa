@@ -3,7 +3,7 @@
 
 Antes de comenzar, lee el enunciado completo de la práctica:
 
-**[P02.2 — Telvora Crisis Tabletop · Enunciado](M02_P02.2_Telvora_Crisis_Tabletop.md)**
+**[P02.2 — Telvora Crisis Tabletop · Enunciado](ENUNCIADO.md)**
 
 La práctica P02.2 se realiza mediante una aplicación web interactiva.
 
