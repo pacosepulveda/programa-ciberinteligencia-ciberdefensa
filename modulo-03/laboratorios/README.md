@@ -135,6 +135,47 @@ LABSERV01  2 GB
 
 En un equipo de 16 GB pueden mantenerse más sistemas simultáneamente.
 
+## Entregables del M03
+
+### P03.1
+
+- tabla de aliases;
+- reglas aplicadas;
+- matriz de validación T01–T06;
+- evidencias de firewall;
+- respuestas de arquitectura.
+
+### P03.2
+
+- configuración básica Suricata;
+- regla local 1000001;
+- segunda regla propia;
+- evidencias de alertas;
+- correlación firewall/IDS;
+- Detection Brief.
+
+### P03.3
+
+- `main.tf` inicial;
+- resultado Checkov inicial;
+- `main.tf` corregido;
+- resultado Checkov final;
+- matriz multicloud;
+- Architecture Review.
+
+## Criterios de evaluación
+
+| Área | Peso |
+|---|---:|
+| Diseño de segmentación | 15 % |
+| Reglas de mínimo privilegio | 15 % |
+| Validación técnica de flujos | 15 % |
+| Configuración y comprensión de IDS | 15 % |
+| Análisis y tuning de detecciones | 10 % |
+| Revisión de postura cloud | 15 % |
+| Remediación IaC | 10 % |
+| Calidad de evidencias y razonamiento | 5 % |
+
 ## Principios del módulo
 
 - Una arquitectura no está validada hasta probar sus flujos.
@@ -146,3 +187,11 @@ En un equipo de 16 GB pueden mantenerse más sistemas simultáneamente.
 - IaC permite revisar seguridad antes del despliegue.
 - Compliance no equivale a seguridad.
 - Un check automático es evidencia, no una decisión.
+
+## Fuentes
+
+- NIST SP 800-207 — Zero Trust Architecture: https://csrc.nist.gov/publications/detail/sp/800-207/final
+- pfSense Documentation: https://docs.netgate.com/pfsense/en/latest/
+- Suricata: https://suricata.io/
+- CIS Benchmarks: https://www.cisecurity.org/cis-benchmarks
+- Checkov: https://www.checkov.io/
