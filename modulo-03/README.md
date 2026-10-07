@@ -2,9 +2,9 @@
 
 ## Material del alumno
 
-### Slides
+### Presentación
 
-- [Carpeta de slides](slides/)
+- [Carpeta de presentación](presentacion/)
 
 > El PDF previsto es `M3_Arquitecturas_Ciberseguridad.pdf`.
 
