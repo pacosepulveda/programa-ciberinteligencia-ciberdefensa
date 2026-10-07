@@ -1,0 +1,8 @@
+# TELVORA M03 - reglas locales de laboratorio
+# Regla base proporcionada para generar una alerta controlada sin explotación.
+
+alert http 10.40.0.0/24 any -> 10.30.0.0/24 any (msg:"TELVORA M03 suspicious lab URI"; flow:to_server,established; http.uri; content:"/telvora-lab-probe"; sid:1000001; rev:1;)
+
+# TODO del alumno:
+# Diseñar una segunda regla local, con un SID distinto, que detecte
+# intentos de inicio de conexión TCP hacia 10.30.0.20:22 sin bloquearlos.
