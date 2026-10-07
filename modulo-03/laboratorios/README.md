@@ -10,6 +10,12 @@ En este módulo el objetivo es pasar del análisis de riesgo a la **implementaci
 
 ## Laboratorios y archivos de partida
 
+### P03.0 — Telvora Host Microsegmentation & Evidence Lab
+
+- [Enunciado](P03.0_Telvora_Host_Microsegmentation/ENUNCIADO.md)
+- [Script de validación de flujos](P03.0_Telvora_Host_Microsegmentation/validate_flows.sh)
+- [Matriz de validación](P03.0_Telvora_Host_Microsegmentation/MATRIZ_VALIDACION.csv)
+
 ### P03.1 — Telvora Segmentation Lab
 
 - [Enunciado](P03.1_Telvora_Segmentation_Lab/ENUNCIADO.md)
@@ -24,25 +30,34 @@ En este módulo el objetivo es pasar del análisis de riesgo a la **implementaci
 
 - [Enunciado](P03.3_Telvora_Cloud_Architecture_Review/ENUNCIADO.md)
 - [Terraform inicial bajo revisión](P03.3_Telvora_Cloud_Architecture_Review/main.tf)
+- [Guardrails de arquitectura](P03.3_Telvora_Cloud_Architecture_Review/TELVORA_GUARDRAILS.md)
+- [Checker policy-as-code](P03.3_Telvora_Cloud_Architecture_Review/iac_guardrails.py)
 
-La secuencia práctica es:
+## Relación con los bloques del módulo
+
+| Laboratorio | Conceptos principales |
+|---|---|
+| P03.0 | microsegmentación · management plane · default deny · telemetría · validación positiva/negativa |
+| P03.1 | segmentación por intención · firewall stateful · mínimo privilegio · evidencia de flujos |
+| P03.2 | IDS/IPS · ubicación de sensores · alertas · correlación · tuning |
+| P03.3 | responsabilidad compartida · IaC · policy-as-code · guardrails · DevSecOps · riesgo residual |
+
+La secuencia conceptual es:
 
 ```text
-necesidad de negocio
+intención de seguridad
       ↓
-zonas de seguridad
+política explícita
       ↓
-política de comunicaciones
+enforcement
       ↓
-reglas de firewall
+telemetría
       ↓
-validación técnica
+validación
       ↓
-telemetría IDS
+evidencia
       ↓
-detección
-      ↓
-revisión de postura cloud
+riesgo residual
 ```
 
 ## Entorno de laboratorio
@@ -51,14 +66,33 @@ revisión de postura cloud
 
 | Máquina | RAM habitual | Uso |
 |---|---:|---|
+| `KALI01` | 1.5 GB | estación de validación, análisis y revisión IaC |
+| `LINUX01` | 1 GB | servidor Linux y workload protegido |
 | `FW01` | 1 GB / 2 GB con Suricata | pfSense CE, routing, firewall e IDS |
-| `KALI01` | 1.5 GB | validación desde zona RED |
-| `LINUX01` | 1 GB | servicio situado en DMZ |
-| `LABSERV01` | 1–2 GB | estación técnica en CORP y análisis IaC |
+| `LABSERV01` | 1–2 GB | estación técnica en CORP |
 
-No es necesario mantener las cuatro encendidas simultáneamente.
+No es necesario mantener todas las máquinas encendidas simultáneamente.
 
-## Topología
+## Perfiles por práctica
+
+### P03.0
+
+```text
+KALI01
+LINUX01
+```
+
+Red de referencia:
+
+```text
+10.20.0.0/24
+KALI01   10.20.0.10
+LINUX01  10.20.0.20
+```
+
+### P03.1 y P03.2
+
+Utilizan la topología segmentada del Telvora Cyber Range:
 
 ```text
                     TELVORA CYBER RANGE
@@ -82,15 +116,9 @@ No es necesario mantener las cuatro encendidas simultáneamente.
    10.30.0.0/24              10.40.0.0/24
              |              |
         LINUX01 .20      LABSERV01 .30
-                           |
-                     host físico / gestión
 ```
 
-El equipo físico puede tener una interfaz en la red virtual CORP para acceder a la GUI de `FW01`.
-
-Las redes deben ser **virtuales y aisladas**. No deben corresponder a redes corporativas o domésticas reales.
-
-## Plan de direccionamiento
+Plan de direccionamiento:
 
 | Zona | Red | Gateway |
 |---|---|---|
@@ -98,55 +126,25 @@ Las redes deben ser **virtuales y aisladas**. No deben corresponder a redes corp
 | DMZ | `10.30.0.0/24` | `10.30.0.1` |
 | CORP | `10.40.0.0/24` | `10.40.0.1` |
 
-Hosts:
-
-```text
-KALI01      10.20.0.10
-LINUX01     10.30.0.20
-LABSERV01   10.40.0.30
-```
-
-La dirección del host físico en CORP puede variar.
-
-## Perfil de 8 GB
-
-### P03.1 — Fase RED
-
-```text
-FW01       1 GB
-KALI01   1.5 GB
-LINUX01    1 GB
-----------------
-Total    3.5 GB
-```
-
-Después se apaga `KALI01`.
-
-### P03.1 — Fase CORP/DMZ
-
-```text
-FW01       1 GB
-LINUX01    1 GB
-LABSERV01  1 GB
-----------------
-Total      3 GB
-```
-
-### P03.2 — Suricata
-
-`FW01` puede ampliarse temporalmente a 2 GB. No es necesario mantener todas las máquinas encendidas durante la configuración y análisis.
-
 ### P03.3
 
-Solo:
-
 ```text
-LABSERV01  2 GB
+KALI01
 ```
 
-En un equipo de 16 GB pueden mantenerse más sistemas simultáneamente.
+No requiere desplegar recursos cloud. La revisión se realiza sobre IaC y guardrails locales.
 
 ## Entregables del M03
+
+### P03.0
+
+- política de comunicaciones;
+- reglas de microsegmentación;
+- matriz antes/después;
+- prueba positiva;
+- prueba negativa;
+- evidencia de logging;
+- Architecture Validation Brief.
 
 ### P03.1
 
@@ -167,12 +165,12 @@ En un equipo de 16 GB pueden mantenerse más sistemas simultáneamente.
 
 ### P03.3
 
-- `main.tf` inicial;
-- resultado Checkov inicial;
+- revisión manual inicial;
+- resultado de guardrails inicial;
 - `main.tf` corregido;
-- resultado Checkov final;
-- matriz multicloud;
-- Architecture Review.
+- resultado final;
+- análisis de policy-as-code y pipeline;
+- Architecture Review Brief.
 
 ## Principios del módulo
 
