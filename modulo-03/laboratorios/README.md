@@ -12,9 +12,9 @@ En este módulo el objetivo es pasar del análisis de riesgo a la **implementaci
 
 ### P03.0A — Telvora Host Microsegmentation & Evidence Lab
 
-- [Enunciado](P03.0_Telvora_Host_Microsegmentation/ENUNCIADO.md)
-- [Script de validación de flujos](P03.0_Telvora_Host_Microsegmentation/validate_flows.sh)
-- [Matriz de validación](P03.0_Telvora_Host_Microsegmentation/MATRIZ_VALIDACION.csv)
+- [Enunciado](P03.0A_Telvora_Host_Microsegmentation/ENUNCIADO.md)
+- [Script de validación de flujos](P03.0A_Telvora_Host_Microsegmentation/validate_flows.sh)
+- [Matriz de validación](P03.0A_Telvora_Host_Microsegmentation/MATRIZ_VALIDACION.csv)
 
 Conceptos: microsegmentación en host, `default deny`, protección del management plane, logging y validación positiva/negativa.
 
