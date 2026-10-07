@@ -14,7 +14,7 @@ La dirección técnica no quiere recibir únicamente un diagrama. Necesita un pa
 - ¿qué riesgos residuales siguen abiertos?;
 - ¿cómo se demuestra que la arquitectura funciona como se afirma?
 
-Tu misión es preparar ese **Architecture Defence Pack** reutilizando la evidencia obtenida en P03.1, P03.2 y P03.3.
+Tu misión es preparar ese **Architecture Defence Pack** reutilizando la evidencia obtenida en P03.0, P03.1, P03.2 y P03.3.
 
 ---
 
@@ -136,6 +136,7 @@ Debes incluir, cuando corresponda:
 
 - firewalling stateful;
 - segmentación;
+- microsegmentación en host;
 - IDS/Suricata;
 - logging;
 - configuración cloud/IaC;
@@ -165,6 +166,8 @@ Define cómo demostrarías que funciona.
 
 Incluye como mínimo:
 
+- una prueba positiva y una prueba negativa de P03.0;
+- evidencia de logging de P03.0;
 - resultados de T01–T06 de P03.1;
 - una alerta controlada de P03.2;
 - correlación firewall/IDS;
