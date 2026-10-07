@@ -1,7 +1,7 @@
 # P03.3 — Telvora Cloud Architecture Review
 ## Revisión de postura cloud mediante Infrastructure as Code
 
-> **Antes de comenzar:** revisa el [entorno común y perfil de memoria del M03](../README.md#3-entorno-de-laboratorio).
+> **Antes de comenzar:** revisa el [entorno común y perfil de memoria del M03](../README.md#entorno-de-laboratorio).
 
 ---
 
@@ -49,72 +49,42 @@ checkov --version
 
 ---
 
-# 3. Crea el directorio
+# 3. Prepara el directorio
+
+El repositorio incluye el fichero [`main.tf`](main.tf) que se utilizará como configuración inicial bajo revisión.
+
+Desde tu copia local del repositorio:
 
 ```bash
 mkdir -p ~/m03-cloud-review
+cp main.tf ~/m03-cloud-review/main.tf
 cd ~/m03-cloud-review
+```
+
+Si has clonado el repositorio completo, adapta la ruta de origen al directorio donde se encuentra esta práctica.
+
+Antes de modificarlo, conserva una copia:
+
+```bash
+cp main.tf main-inicial.tf
 ```
 
 ---
 
 # 4. Configuración bajo revisión
 
-Crea:
+Revisa el contenido de `main.tf` antes de ejecutar ninguna herramienta.
 
-```text
-main.tf
-```
+El fichero contiene deliberadamente decisiones inseguras relacionadas con:
 
-con:
-
-```hcl
-resource "aws_security_group" "admin" {
-  name = "telvora-admin"
-
-  ingress {
-    description = "SSH administration"
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-}
-
-resource "aws_s3_bucket" "evidence" {
-  bucket = "telvora-m03-evidence-demo"
-}
-
-resource "aws_s3_bucket_public_access_block" "evidence" {
-  bucket = aws_s3_bucket.evidence.id
-
-  block_public_acls       = false
-  ignore_public_acls      = false
-  block_public_policy     = false
-  restrict_public_buckets = false
-}
-
-resource "aws_ebs_volume" "data" {
-  availability_zone = "eu-west-1a"
-  size              = 20
-  encrypted         = false
-}
-
-resource "aws_cloudwatch_log_group" "app" {
-  name = "/telvora/m03/app"
-}
-```
+- exposición de administración;
+- acceso público a almacenamiento;
+- cifrado de volúmenes;
+- retención de logs.
 
 Este fichero es exclusivamente didáctico.
 
-No se desplegará.
+**No se desplegará.**
 
 ---
 
