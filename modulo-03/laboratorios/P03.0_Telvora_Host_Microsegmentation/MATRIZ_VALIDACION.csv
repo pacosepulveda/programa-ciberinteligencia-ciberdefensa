@@ -1,6 +1,0 @@
-fase,id,flujo,esperado,observado,evidencia,resultado
-ANTES,H01,KALI01 -> LINUX01 TCP/80,Reachable,,,
-ANTES,H02,KALI01 -> LINUX01 TCP/22,Reachable inicialmente,,,
-DESPUES,H03,KALI01 -> LINUX01 TCP/80,Allow,,,
-DESPUES,H04,KALI01 -> LINUX01 TCP/22,Deny,,,
-DESPUES,H05,Intento bloqueado SSH genera evidencia,Log,,,
