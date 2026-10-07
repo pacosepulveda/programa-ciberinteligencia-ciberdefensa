@@ -14,7 +14,7 @@
 
 ### P03.0 — Prácticas adicionales
 
-- [P03.0A — Telvora Host Microsegmentation & Evidence Lab](laboratorios/P03.0_Telvora_Host_Microsegmentation/ENUNCIADO.md)
+- [P03.0A — Telvora Host Microsegmentation & Evidence Lab](laboratorios/P03.0A_Telvora_Host_Microsegmentation/ENUNCIADO.md)
 - [P03.0B — Telvora Architecture as Code & Guardrails Lab](laboratorios/P03.0B_Telvora_Architecture_as_Code/ENUNCIADO.md)
 
 ### Laboratorios principales
