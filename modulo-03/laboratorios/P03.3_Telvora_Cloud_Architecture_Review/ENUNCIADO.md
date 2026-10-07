@@ -1,7 +1,7 @@
 # P03.3 — Telvora Cloud Architecture Review
-## Revisión de postura cloud mediante Infrastructure as Code
+## Revisión de postura cloud, IaC y policy-as-code
 
-> **Antes de comenzar:** revisa el [entorno común y perfil de memoria del M03](../README.md#entorno-de-laboratorio).
+> **Antes de comenzar:** revisa el [entorno común del M03](../README.md).
 
 ---
 
@@ -9,61 +9,64 @@
 
 TELVORA está preparando una pequeña carga en AWS.
 
-El equipo de plataforma entrega una plantilla Terraform antes de desplegarla.
-
-Tu función no es desplegar recursos.
+El equipo de plataforma entrega una plantilla Terraform antes de desplegarla. El objetivo es revisar la arquitectura **antes** de que exista infraestructura real y comprobar si cumple los guardrails aprobados.
 
 Tu misión es responder:
 
-> **¿Qué decisiones de arquitectura y configuración crean exposición innecesaria antes de que lleguen a producción?**
+> **¿Qué decisiones de arquitectura y configuración crean exposición innecesaria y cómo podemos convertir la política en controles verificables?**
 
-La práctica utiliza análisis estático IaC para introducir:
+La práctica trabaja:
 
 - responsabilidad compartida;
-- CIS Benchmarks;
-- CSPM;
-- policy as code;
-- DevSecOps.
+- configuración cloud;
+- Infrastructure as Code;
+- policy-as-code;
+- guardrails;
+- DevSecOps;
+- validación de arquitectura;
+- riesgo residual.
+
+No se desplegará ningún recurso cloud.
 
 ---
 
 # 2. Máquina
 
-Utiliza únicamente:
+Utiliza:
 
 ```text
-LABSERV01
+KALI01
 ```
 
-Debe disponer de:
+Necesitas únicamente:
 
-- Python;
-- Git;
-- Checkov u otra herramienta indicada por el instructor.
+- Python 3;
+- Git o acceso a los archivos del repositorio;
+- un editor de texto.
 
 Comprueba:
 
 ```bash
-checkov --version
+python3 --version
 ```
 
 ---
 
-# 3. Prepara el directorio
+# 3. Archivos de la práctica
 
-El repositorio incluye el fichero [`main.tf`](main.tf) que se utilizará como configuración inicial bajo revisión.
+El directorio contiene:
 
-Desde tu copia local del repositorio:
-
-```bash
-mkdir -p ~/m03-cloud-review
-cp main.tf ~/m03-cloud-review/main.tf
-cd ~/m03-cloud-review
+```text
+main.tf
+TELVORA_GUARDRAILS.md
+iac_guardrails.py
 ```
 
-Si has clonado el repositorio completo, adapta la ruta de origen al directorio donde se encuentra esta práctica.
+- `main.tf`: arquitectura IaC que debes revisar.
+- `TELVORA_GUARDRAILS.md`: política mínima aprobada.
+- `iac_guardrails.py`: verificador local de policy-as-code para el laboratorio.
 
-Antes de modificarlo, conserva una copia:
+Trabaja sobre una copia para conservar el estado inicial:
 
 ```bash
 cp main.tf main-inicial.tf
@@ -71,35 +74,20 @@ cp main.tf main-inicial.tf
 
 ---
 
-# 4. Configuración bajo revisión
+# 4. Fase 1 — Revisión manual antes de automatizar
 
-Revisa el contenido de `main.tf` antes de ejecutar ninguna herramienta.
+Lee `main.tf` sin ejecutar todavía el checker.
 
-El fichero contiene deliberadamente decisiones inseguras relacionadas con:
-
-- exposición de administración;
-- acceso público a almacenamiento;
-- cifrado de volúmenes;
-- retención de logs.
-
-Este fichero es exclusivamente didáctico.
-
-**No se desplegará.**
-
----
-
-# 5. Primera revisión manual
-
-Antes de ejecutar una herramienta, identifica al menos cuatro decisiones que revisarías.
+Identifica al menos cuatro decisiones que revisarías.
 
 Completa:
 
-| Hallazgo | Activo | Riesgo | Principio afectado |
-|---|---|---|---|
-| | | | |
-| | | | |
-| | | | |
-| | | | |
+| Hallazgo | Activo | Qué puede ocurrir | Principio afectado | Prioridad |
+|---|---|---|---|---|
+| | | | | |
+| | | | | |
+| | | | | |
+| | | | | |
 
 Principios posibles:
 
@@ -110,91 +98,103 @@ Principios posibles:
 - reducción de superficie;
 - defensa en profundidad.
 
+No confundas una configuración llamativa con una vulnerabilidad explotable demostrada.
+
 ---
 
-# 6. Análisis automático
+# 5. Fase 2 — Política de arquitectura
+
+Lee:
+
+```text
+TELVORA_GUARDRAILS.md
+```
+
+Los controles definidos son:
+
+```text
+G001  SSH administrativo no expuesto a Internet
+G002  S3 Public Access Block habilitado
+G003  Volúmenes EBS cifrados
+G004  Retención explícita de logs >= 90 días
+```
+
+Para cada guardrail explica:
+
+1. qué riesgo intenta reducir;
+2. qué recurso afecta;
+3. si es preventivo, detectivo o ambos;
+4. qué riesgo puede seguir existiendo aunque el check pase.
+
+---
+
+# 6. Fase 3 — Primera evaluación automática
 
 Ejecuta:
 
 ```bash
-checkov -f main.tf --framework terraform
+python3 iac_guardrails.py main.tf
 ```
 
-La salida concreta puede variar según la versión de Checkov.
+Registra el resultado:
 
-Registra:
+| Guardrail | PASS / FAIL | Evidencia en `main.tf` | Riesgo asociado |
+|---|---|---|---|
+| G001 | | | |
+| G002 | | | |
+| G003 | | | |
+| G004 | | | |
 
-- checks superados;
-- checks fallidos;
-- recurso;
-- descripción;
-- identificador del check;
-- línea afectada.
+Compara la salida automática con tu revisión manual.
 
-No asumas que cada fallo representa automáticamente el mismo nivel de riesgo para TELVORA.
+Responde:
+
+- ¿detectó el checker todo lo que habías identificado?
+- ¿detectaste tú algún problema que no esté expresado como guardrail?
+- ¿por qué ambas cosas pueden ocurrir?
 
 ---
 
-# 7. Clasificación
+# 7. Fase 4 — Remediación
 
-Clasifica los hallazgos en:
+Modifica `main.tf` para cumplir la política aprobada.
 
-```text
-IDENTITY / ACCESS
-NETWORK
-DATA PROTECTION
-LOGGING / DETECTION
-RESILIENCE
-```
+## R1 — Administración
 
-Completa:
+SSH administrativo no debe estar expuesto a todo Internet.
 
-| Finding | Categoría | Riesgo | Prioridad | Justificación |
-|---|---|---|---|---|
-| | | | | |
-
----
-
-# 8. Remediación
-
-Modifica el fichero para:
-
-### R1
-
-No permitir SSH administrativo desde todo Internet.
-
-Utiliza, para el laboratorio:
+Para el escenario del laboratorio, la red administrativa autorizada es:
 
 ```text
 10.40.0.0/24
 ```
 
-como ejemplo de red administrativa autorizada.
+## R2 — Almacenamiento
 
-### R2
+Las cuatro protecciones de S3 Public Access Block deben quedar habilitadas.
 
-Habilitar las cuatro protecciones de acceso público del bucket.
+## R3 — Protección de datos
 
-### R3
+El volumen EBS debe declarar cifrado explícito.
 
-Habilitar cifrado del volumen EBS.
+## R4 — Logging
 
-### R4
+El log group debe definir una retención de al menos:
 
-Definir una política explícita de retención de logs.
+```text
+90 días
+```
 
-Selecciona un periodo razonable y justifícalo.
-
-No existe un número universal válido para todas las organizaciones.
+No añadas cambios que no puedas justificar.
 
 ---
 
-# 9. Segundo escaneo
+# 8. Fase 5 — Segunda evaluación
 
 Vuelve a ejecutar:
 
 ```bash
-checkov -f main.tf --framework terraform
+python3 iac_guardrails.py main.tf
 ```
 
 Compara:
@@ -205,9 +205,40 @@ vs.
 DESPUÉS
 ```
 
-No es obligatorio obtener cero findings.
+Registra:
 
-Algunos controles requieren decisiones de arquitectura adicionales.
+| Métrica | Inicial | Final |
+|---|---:|---:|
+| Guardrails PASS | | |
+| Guardrails FAIL | | |
+
+Una ejecución con todos los checks en `PASS` demuestra **conformidad con estas cuatro reglas**, no demuestra que toda la arquitectura sea segura.
+
+---
+
+# 9. Fase 6 — Del check al pipeline
+
+Supón que esta validación se ejecuta automáticamente antes de aceptar un cambio IaC.
+
+Diseña una política de pipeline para responder:
+
+1. ¿qué guardrails deberían bloquear siempre el cambio?
+2. ¿permitirías excepciones?
+3. ¿quién podría aprobarlas?
+4. ¿qué debería registrar una excepción?
+5. ¿cuándo debería caducar o revisarse?
+
+Representa el flujo:
+
+```text
+Cambio IaC
+   ↓
+Validación automática
+   ↓
+PASS ─────────────→ revisión / merge
+   │
+   └─ FAIL → bloqueo o excepción gobernada
+```
 
 ---
 
@@ -215,14 +246,16 @@ Algunos controles requieren decisiones de arquitectura adicionales.
 
 Responde:
 
-1. ¿Quién es responsable de que el Security Group no exponga SSH: AWS o TELVORA?
+1. ¿Quién es responsable de que un Security Group no exponga SSH: AWS o TELVORA?
 2. ¿Quién protege físicamente el hardware?
-3. ¿El cifrado por defecto del proveedor elimina la necesidad de gobernanza de claves?
-4. ¿Qué aporta IaC frente a configurar manualmente?
-5. ¿Qué aporta policy-as-code al pipeline CI/CD?
-6. ¿Un check superado demuestra que el sistema es seguro?
-7. ¿Qué findings pueden estar relacionados con CIS Benchmarks?
-8. ¿Qué controles no pueden comprobarse únicamente mirando este Terraform?
+3. ¿Por qué IaC facilita revisar arquitectura antes del despliegue?
+4. ¿Qué diferencia existe entre una política escrita y policy-as-code?
+5. ¿Un `PASS` en G001 demuestra que el acceso administrativo es seguro?
+6. ¿Qué controles de identidad no puede comprobar este fichero?
+7. ¿Qué aporta una retención explícita si nadie consume los logs?
+8. ¿Por qué un guardrail puede ser técnicamente correcto y operacionalmente insuficiente?
+9. ¿Qué riesgo introduce una excepción permanente a un guardrail?
+10. ¿Qué evidencia conservarías para una revisión de arquitectura posterior?
 
 ---
 
@@ -232,48 +265,20 @@ Para cada problema identifica el equivalente conceptual en Azure y GCP.
 
 | Problema | AWS | Azure | GCP |
 |---|---|---|---|
-| SSH demasiado expuesto | Security Group | | |
+| Administración demasiado expuesta | Security Group | | |
 | Almacenamiento público | S3 | | |
 | Disco sin cifrado adecuado | EBS | | |
-| Logs sin política adecuada | CloudWatch | | |
+| Logs sin política de retención | CloudWatch Logs | | |
 
-No se pide memorizar nombres de todas las opciones de portal.
+No se pide memorizar todos los nombres comerciales.
 
 Se evalúa comprender el **patrón de seguridad**.
 
 ---
 
-# 12. Relación con Zero Trust
+# 12. Architecture Review final
 
-Explica por qué sustituir:
-
-```text
-0.0.0.0/0 → TCP/22
-```
-
-por:
-
-```text
-10.40.0.0/24 → TCP/22
-```
-
-es una mejora, pero **no implementa por sí solo Zero Trust**.
-
-Indica qué controles adicionales serían necesarios para aproximarse a un modelo Zero Trust:
-
-- identidad;
-- estado del dispositivo;
-- autenticación fuerte;
-- autorización contextual;
-- mínimo privilegio;
-- monitorización;
-- reevaluación continua.
-
----
-
-# 13. Architecture Review final
-
-Entrega un documento de una página con:
+Prepara un **Architecture Review Brief** con:
 
 ## Hallazgos prioritarios
 
@@ -283,13 +288,17 @@ Máximo cinco.
 
 Qué puede ocurrir y sobre qué activo.
 
+## Guardrail relacionado
+
+G001–G004 o `NO CUBIERTO`.
+
 ## Remediación
 
 Cambio concreto.
 
 ## Evidencia
 
-Resultado de Checkov o revisión manual.
+Resultado manual y/o del checker.
 
 ## Responsabilidad
 
@@ -297,4 +306,8 @@ Proveedor / TELVORA / compartida.
 
 ## Riesgo residual
 
-Qué no queda resuelto con la modificación.
+Qué no queda resuelto después de que el check pase.
+
+## Decisión de pipeline
+
+Bloquear / permitir / permitir con excepción gobernada.
