@@ -1,0 +1,7 @@
+id,flujo,esperado,observado,evidencia,resultado
+T01,RED -> DMZ HTTP,Allow,,,
+T02,RED -> DMZ SSH,Deny,,,
+T03,RED -> CORP HTTPS,Deny,,,
+T04,CORP -> DMZ HTTP,Allow,,,
+T05,CORP -> DMZ SSH,Allow,,,
+T06,DMZ -> CORP TCP/8080,Deny,,,
