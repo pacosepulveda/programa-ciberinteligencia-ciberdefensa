@@ -16,6 +16,13 @@ modulo-02/
 ├── README.md
 ├── presentacion/
 └── laboratorios/
+
+modulo-03/
+├── README.md
+├── presentacion/
+├── microchallenge-3A/
+├── laboratorios/
+└── mission-03/
 ```
 
 Cada módulo contiene únicamente material destinado al alumno. Las guías de instructor, soluciones y materiales internos no forman parte de este repositorio.
@@ -29,6 +36,13 @@ Cada módulo contiene únicamente material destinado al alumno. Las guías de in
 ### Módulo 2 — Dirección y Gobernanza de la Ciberseguridad
 - [Enunciados de laboratorio](modulo-02/laboratorios/M02_Enunciados_Laboratorios.md)
 - Presentación: `modulo-02/presentacion/M02_Gobernanza_Ciberseguridad.pdf`
+
+### Módulo 3 — Arquitecturas de Ciberseguridad
+- [Índice del módulo](modulo-03/README.md)
+- [Microchallenge 3.A — Architecture under pressure](modulo-03/microchallenge-3A/ENUNCIADO.md)
+- [Laboratorios P03.1, P03.2 y P03.3](modulo-03/laboratorios/README.md)
+- [Mission 03 — Architecture Defence Pack](modulo-03/mission-03/ENUNCIADO.md)
+- Presentación prevista: `modulo-03/presentacion/M3_Arquitecturas_Ciberseguridad.pdf`
 
 ## Uso del material
 
