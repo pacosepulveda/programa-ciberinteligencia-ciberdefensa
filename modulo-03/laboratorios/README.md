@@ -8,13 +8,26 @@
 
 En este módulo el objetivo es pasar del análisis de riesgo a la **implementación y validación de una arquitectura defensiva**.
 
-## Laboratorios y archivos de partida
+## P03.0 — Prácticas adicionales de arquitectura
 
-### P03.0 — Telvora Host Microsegmentation & Evidence Lab
+### P03.0A — Telvora Host Microsegmentation & Evidence Lab
 
 - [Enunciado](P03.0_Telvora_Host_Microsegmentation/ENUNCIADO.md)
 - [Script de validación de flujos](P03.0_Telvora_Host_Microsegmentation/validate_flows.sh)
 - [Matriz de validación](P03.0_Telvora_Host_Microsegmentation/MATRIZ_VALIDACION.csv)
+
+Conceptos: microsegmentación en host, `default deny`, protección del management plane, logging y validación positiva/negativa.
+
+### P03.0B — Telvora Architecture as Code & Guardrails Lab
+
+- [Enunciado](P03.0B_Telvora_Architecture_as_Code/ENUNCIADO.md)
+- [Terraform inicial](P03.0B_Telvora_Architecture_as_Code/main.tf)
+- [Guardrails de arquitectura](P03.0B_Telvora_Architecture_as_Code/TELVORA_GUARDRAILS.md)
+- [Checker policy-as-code](P03.0B_Telvora_Architecture_as_Code/iac_guardrails.py)
+
+Conceptos: responsabilidad compartida, IaC, policy-as-code, guardrails, DevSecOps, validación y riesgo residual.
+
+## Laboratorios principales
 
 ### P03.1 — Telvora Segmentation Lab
 
@@ -30,52 +43,22 @@ En este módulo el objetivo es pasar del análisis de riesgo a la **implementaci
 
 - [Enunciado](P03.3_Telvora_Cloud_Architecture_Review/ENUNCIADO.md)
 - [Terraform inicial bajo revisión](P03.3_Telvora_Cloud_Architecture_Review/main.tf)
-- [Guardrails de arquitectura](P03.3_Telvora_Cloud_Architecture_Review/TELVORA_GUARDRAILS.md)
-- [Checker policy-as-code](P03.3_Telvora_Cloud_Architecture_Review/iac_guardrails.py)
 
 ## Relación con los bloques del módulo
 
 | Laboratorio | Conceptos principales |
 |---|---|
-| P03.0 | microsegmentación · management plane · default deny · telemetría · validación positiva/negativa |
+| P03.0A | microsegmentación · management plane · default deny · telemetría · validación positiva/negativa |
+| P03.0B | responsabilidad compartida · IaC · policy-as-code · guardrails · DevSecOps · riesgo residual |
 | P03.1 | segmentación por intención · firewall stateful · mínimo privilegio · evidencia de flujos |
 | P03.2 | IDS/IPS · ubicación de sensores · alertas · correlación · tuning |
-| P03.3 | responsabilidad compartida · IaC · policy-as-code · guardrails · DevSecOps · riesgo residual |
-
-La secuencia conceptual es:
-
-```text
-intención de seguridad
-      ↓
-política explícita
-      ↓
-enforcement
-      ↓
-telemetría
-      ↓
-validación
-      ↓
-evidencia
-      ↓
-riesgo residual
-```
+| P03.3 | responsabilidad compartida · IaC · CSPM · policy-as-code · DevSecOps |
 
 ## Entorno de laboratorio
 
-### Máquinas
+### P03.0A
 
-| Máquina | RAM habitual | Uso |
-|---|---:|---|
-| `KALI01` | 1.5 GB | estación de validación, análisis y revisión IaC |
-| `LINUX01` | 1 GB | servidor Linux y workload protegido |
-| `FW01` | 1 GB / 2 GB con Suricata | pfSense CE, routing, firewall e IDS |
-| `LABSERV01` | 1–2 GB | estación técnica en CORP |
-
-No es necesario mantener todas las máquinas encendidas simultáneamente.
-
-## Perfiles por práctica
-
-### P03.0
+Utiliza:
 
 ```text
 KALI01
@@ -89,6 +72,16 @@ Red de referencia:
 KALI01   10.20.0.10
 LINUX01  10.20.0.20
 ```
+
+### P03.0B
+
+Utiliza:
+
+```text
+KALI01
+```
+
+Requiere Python 3, los archivos del repositorio y un editor de texto. No se despliega infraestructura cloud.
 
 ### P03.1 y P03.2
 
@@ -128,15 +121,17 @@ Plan de direccionamiento:
 
 ### P03.3
 
+Utiliza:
+
 ```text
-KALI01
+LABSERV01
 ```
 
-No requiere desplegar recursos cloud. La revisión se realiza sobre IaC y guardrails locales.
+La revisión se realiza sobre IaC mediante Checkov u otra herramienta indicada por el instructor. No se despliegan recursos cloud.
 
 ## Entregables del M03
 
-### P03.0
+### P03.0A
 
 - política de comunicaciones;
 - reglas de microsegmentación;
@@ -145,6 +140,15 @@ No requiere desplegar recursos cloud. La revisión se realiza sobre IaC y guardr
 - prueba negativa;
 - evidencia de logging;
 - Architecture Validation Brief.
+
+### P03.0B
+
+- revisión manual inicial;
+- resultado inicial de guardrails;
+- `main.tf` corregido;
+- resultado final;
+- análisis de policy-as-code y pipeline;
+- Architecture Review Brief.
 
 ### P03.1
 
@@ -165,12 +169,12 @@ No requiere desplegar recursos cloud. La revisión se realiza sobre IaC y guardr
 
 ### P03.3
 
-- revisión manual inicial;
-- resultado de guardrails inicial;
+- `main.tf` inicial;
+- resultado Checkov inicial;
 - `main.tf` corregido;
-- resultado final;
-- análisis de policy-as-code y pipeline;
-- Architecture Review Brief.
+- resultado Checkov final;
+- matriz multicloud;
+- Architecture Review.
 
 ## Principios del módulo
 
