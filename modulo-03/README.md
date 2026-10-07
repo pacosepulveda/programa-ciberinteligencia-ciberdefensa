@@ -15,6 +15,7 @@
 ### Laboratorios
 
 - [Entorno y visión general del M03](laboratorios/README.md)
+- [P03.0 — Telvora Host Microsegmentation & Evidence Lab](laboratorios/P03.0_Telvora_Host_Microsegmentation/ENUNCIADO.md)
 - [P03.1 — Telvora Segmentation Lab](laboratorios/P03.1_Telvora_Segmentation_Lab/ENUNCIADO.md)
 - [P03.2 — Telvora Network Detection Lab](laboratorios/P03.2_Telvora_Network_Detection_Lab/ENUNCIADO.md)
 - [P03.3 — Telvora Cloud Architecture Review](laboratorios/P03.3_Telvora_Cloud_Architecture_Review/ENUNCIADO.md)
@@ -26,26 +27,20 @@
 - [Plantilla ADR](mission-03/ADR_TEMPLATE.md)
 - [Matriz de flujos](mission-03/MATRIZ_FLUJOS.csv)
 
-## Secuencia práctica
+## Recorrido práctico
 
 ```text
 Microchallenge 3.A
       ↓
-necesidad de negocio
+intención y trust assumptions
       ↓
-zonas de seguridad
+P03.0 · microsegmentación + management plane + evidencia
       ↓
-política de comunicaciones
+P03.1 · segmentación por intención con firewall
       ↓
-reglas de firewall
+P03.2 · detección y telemetría IDS
       ↓
-validación técnica
-      ↓
-telemetría IDS
-      ↓
-detección
-      ↓
-revisión de postura cloud
+P03.3 · arquitectura cloud + IaC + policy-as-code
       ↓
 Mission 03 · Architecture Defence Pack
 ```
