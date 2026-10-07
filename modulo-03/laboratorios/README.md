@@ -8,11 +8,22 @@
 
 En este módulo el objetivo es pasar del análisis de riesgo a la **implementación y validación de una arquitectura defensiva**.
 
-## Laboratorios
+## Laboratorios y archivos de partida
 
-- [P03.1 — Telvora Segmentation Lab](P03.1_Telvora_Segmentation_Lab/ENUNCIADO.md)
-- [P03.2 — Telvora Network Detection Lab](P03.2_Telvora_Network_Detection_Lab/ENUNCIADO.md)
-- [P03.3 — Telvora Cloud Architecture Review](P03.3_Telvora_Cloud_Architecture_Review/ENUNCIADO.md)
+### P03.1 — Telvora Segmentation Lab
+
+- [Enunciado](P03.1_Telvora_Segmentation_Lab/ENUNCIADO.md)
+- [Matriz de validación T01–T06](P03.1_Telvora_Segmentation_Lab/MATRIZ_VALIDACION.csv)
+
+### P03.2 — Telvora Network Detection Lab
+
+- [Enunciado](P03.2_Telvora_Network_Detection_Lab/ENUNCIADO.md)
+- [Regla Suricata de partida](P03.2_Telvora_Network_Detection_Lab/telvora_m03.rules)
+
+### P03.3 — Telvora Cloud Architecture Review
+
+- [Enunciado](P03.3_Telvora_Cloud_Architecture_Review/ENUNCIADO.md)
+- [Terraform inicial bajo revisión](P03.3_Telvora_Cloud_Architecture_Review/main.tf)
 
 La secuencia práctica es:
 
@@ -34,7 +45,7 @@ detección
 revisión de postura cloud
 ```
 
-## 3. Entorno de laboratorio
+## Entorno de laboratorio
 
 ### Máquinas
 
@@ -47,7 +58,7 @@ revisión de postura cloud
 
 No es necesario mantener las cuatro encendidas simultáneamente.
 
-## 4. Topología
+## Topología
 
 ```text
                     TELVORA CYBER RANGE
@@ -79,7 +90,7 @@ El equipo físico puede tener una interfaz en la red virtual CORP para acceder a
 
 Las redes deben ser **virtuales y aisladas**. No deben corresponder a redes corporativas o domésticas reales.
 
-## 5. Plan de direccionamiento
+## Plan de direccionamiento
 
 | Zona | Red | Gateway |
 |---|---|---|
@@ -97,7 +108,7 @@ LABSERV01   10.40.0.30
 
 La dirección del host físico en CORP puede variar.
 
-## 6. Perfil de 8 GB
+## Perfil de 8 GB
 
 ### P03.1 — Fase RED
 
@@ -163,19 +174,6 @@ En un equipo de 16 GB pueden mantenerse más sistemas simultáneamente.
 - matriz multicloud;
 - Architecture Review.
 
-## Criterios de evaluación
-
-| Área | Peso |
-|---|---:|
-| Diseño de segmentación | 15 % |
-| Reglas de mínimo privilegio | 15 % |
-| Validación técnica de flujos | 15 % |
-| Configuración y comprensión de IDS | 15 % |
-| Análisis y tuning de detecciones | 10 % |
-| Revisión de postura cloud | 15 % |
-| Remediación IaC | 10 % |
-| Calidad de evidencias y razonamiento | 5 % |
-
 ## Principios del módulo
 
 - Una arquitectura no está validada hasta probar sus flujos.
@@ -187,11 +185,3 @@ En un equipo de 16 GB pueden mantenerse más sistemas simultáneamente.
 - IaC permite revisar seguridad antes del despliegue.
 - Compliance no equivale a seguridad.
 - Un check automático es evidencia, no una decisión.
-
-## Fuentes
-
-- NIST SP 800-207 — Zero Trust Architecture: https://csrc.nist.gov/publications/detail/sp/800-207/final
-- pfSense Documentation: https://docs.netgate.com/pfsense/en/latest/
-- Suricata: https://suricata.io/
-- CIS Benchmarks: https://www.cisecurity.org/cis-benchmarks
-- Checkov: https://www.checkov.io/
