@@ -24,6 +24,10 @@
 - [P03.2 — Telvora Network Detection Lab](laboratorios/P03.2_Telvora_Network_Detection_Lab/ENUNCIADO.md)
 - [P03.3 — Telvora Cloud Architecture Review](laboratorios/P03.3_Telvora_Cloud_Architecture_Review/ENUNCIADO.md)
 
+### Recursos de apoyo
+
+- [Herramientas open source — SIEM, IDS/IPS, EDR/XDR, NGFW y WAF](recursos/HERRAMIENTAS_OPEN_SOURCE.md)
+
 ### Misión de consolidación
 
 - [Mission 03 — Architecture Defence Pack](mission-03/ENUNCIADO.md)
