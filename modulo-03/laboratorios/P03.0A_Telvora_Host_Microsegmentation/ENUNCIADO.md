@@ -32,6 +32,8 @@ KALI01
 LINUX01
 ```
 
+En esta práctica ambas máquinas permanecen en **RED**, antes de la transición de LINUX01 a DMZ que se realizará en P03.1.
+
 Direcciones de referencia:
 
 ```text
@@ -46,7 +48,7 @@ ip -br address
 ip route
 ```
 
-Si tu entorno utiliza direcciones distintas, adapta los comandos y la política.
+Si tu entorno utiliza nombres de interfaz diferentes, adapta únicamente la interfaz; el direccionamiento lógico del laboratorio debe mantenerse.
 
 ---
 
@@ -224,7 +226,7 @@ Responde:
 
 ---
 
-# 10. Cierre y restauración
+# 10. Cierre y restauración obligatoria
 
 Cuando hayas terminado de recoger evidencias, deja constancia del estado final:
 
@@ -232,13 +234,22 @@ Cuando hayas terminado de recoger evidencias, deja constancia del estado final:
 sudo ufw status verbose
 ```
 
-Si el instructor indica que el laboratorio debe volver a su estado previo, desactiva el firewall:
+Para continuar con P03.1, **debes desactivar UFW**. En la siguiente práctica el control de segmentación se trasladará a FW01 y LINUX01 pasará a la DMZ; mantener UFW activo alteraría las pruebas de SSH y HTTP.
+
+Ejecuta:
 
 ```bash
 sudo ufw disable
+sudo ufw status
 ```
 
-No elimines evidencias hasta haber completado el entregable.
+El estado debe quedar:
+
+```text
+Status: inactive
+```
+
+No es necesario borrar las reglas creadas: se conserva la configuración como evidencia de la práctica, pero el firewall local debe quedar desactivado antes de P03.1.
 
 ---
 
