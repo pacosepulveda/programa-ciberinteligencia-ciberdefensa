@@ -1,7 +1,7 @@
 # P03.1 — Telvora Segmentation Lab
 ## Segmentación, mínimo privilegio y validación de política
 
-> **Antes de comenzar:** revisa el [entorno común, topología y perfil de memoria del M03](../README.md#3-entorno-de-laboratorio).
+> **Antes de comenzar:** revisa el [entorno común y la topología del M03](../README.md#entorno-de-laboratorio).
 
 ---
 
@@ -61,7 +61,86 @@ Las reglas deben aplicar mínimo privilegio y ser comprensibles para otro admini
 
 ---
 
-# 3. Estado inicial esperado
+# 3. Preparación de la topología
+
+Antes de comenzar, P03.0A debe haber finalizado con UFW desactivado en `LINUX01`:
+
+```bash
+sudo ufw status
+```
+
+Debe mostrar:
+
+```text
+Status: inactive
+```
+
+La topología para esta práctica es:
+
+```text
+RED         10.20.0.0/24
+DMZ         10.30.0.0/24
+CORP        10.40.0.0/24
+
+KALI01      10.20.0.10
+FW01 RED    10.20.0.254
+FW01 DMZ    10.30.0.1
+FW01 CORP   10.40.0.1
+LINUX01     10.30.0.20
+LABSERV01   10.40.0.30
+```
+
+## 3.1 Mover LINUX01 a DMZ
+
+Siguiendo las indicaciones del instructor, conecta la interfaz de laboratorio de `LINUX01` a la red DMZ correspondiente a tu hipervisor y configura:
+
+```text
+IP       10.30.0.20/24
+Gateway  10.30.0.1
+```
+
+Los nombres de las redes por hipervisor están documentados en el README del módulo.
+
+Comprueba:
+
+```bash
+ip -br address
+ip route
+```
+
+No continúes si LINUX01 no está en `10.30.0.20/24`.
+
+## 3.2 Preparar KALI01 para alcanzar DMZ y CORP
+
+KALI01 permanece en RED con `10.20.0.10`.
+
+La interfaz RED de FW01 es:
+
+```text
+10.20.0.254
+```
+
+Añade rutas temporales para que el tráfico hacia las otras zonas pase por FW01:
+
+```bash
+sudo ip route replace 10.30.0.0/24 via 10.20.0.254
+sudo ip route replace 10.40.0.0/24 via 10.20.0.254
+```
+
+Comprueba:
+
+```bash
+ip route get 10.30.0.20
+ip route get 10.40.0.1
+```
+
+Ambos destinos deben utilizar `10.20.0.254` como siguiente salto.
+
+> `10.20.0.1` puede seguir existiendo como gateway/NAT de la red de M01/M02. No es una interfaz de FW01.
+
+---
+
+# 4. Estado inicial esperado
 
 `LINUX01` debe ofrecer:
 
@@ -83,13 +162,17 @@ ip -br address
 ip route
 ```
 
-No continúes si la configuración IP no corresponde a la zona DMZ.
-
 ---
 
-# 4. Acceso a FW01
+# 5. Acceso a FW01
 
-Desde el navegador del host físico accede a la interfaz de administración de pfSense en CORP.
+Desde el navegador de `KALI01` accede a:
+
+```text
+https://10.20.0.254
+```
+
+No es necesario conectar el host físico a CORP.
 
 Registra:
 
@@ -102,7 +185,7 @@ No publiques credenciales en los entregables.
 
 ---
 
-# 5. Crea aliases
+# 6. Crea aliases
 
 Crea aliases que hagan las reglas legibles.
 
@@ -137,7 +220,7 @@ DMZ_NET
 
 ---
 
-# 6. Política de RED
+# 7. Política de RED
 
 Implementa las reglas necesarias para que:
 
@@ -157,7 +240,7 @@ Documenta:
 
 ---
 
-# 7. Validación desde KALI01
+# 8. Validación desde KALI01
 
 Arranca:
 
@@ -175,7 +258,7 @@ ip route
 ## Prueba HTTP
 
 ```bash
-curl -I http://10.30.0.20/
+curl -I --connect-timeout 3 http://10.30.0.20/
 ```
 
 Debe existir conectividad si POL-01 está correctamente aplicada.
@@ -200,7 +283,7 @@ El tráfico debe ser bloqueado por la política.
 
 ## Prueba hacia CORP
 
-Comprueba un destino autorizado de la zona CORP, por ejemplo la interfaz del firewall:
+Comprueba la interfaz CORP del firewall:
 
 ```bash
 nc -vz -w 3 10.40.0.1 443
@@ -210,7 +293,7 @@ Debe quedar bloqueado desde RED.
 
 ---
 
-# 8. Evidencia de firewall
+# 9. Evidencia de firewall
 
 En pfSense localiza los logs correspondientes a:
 
@@ -231,7 +314,7 @@ Responde:
 
 ---
 
-# 9. Fase CORP/DMZ
+# 10. Fase CORP/DMZ
 
 En equipos con 8 GB:
 
@@ -245,6 +328,13 @@ LABSERV01 = 10.40.0.30
 LINUX01   = 10.30.0.20
 ```
 
+En LABSERV01 verifica que las rutas hacia RED y DMZ utilizan FW01:
+
+```bash
+ip route get 10.30.0.20
+ip route get 10.20.0.254
+```
+
 Configura las reglas necesarias para:
 
 ```text
@@ -255,12 +345,12 @@ DMZ  → CORP           BLOQUEADO por defecto
 
 ---
 
-# 10. Validación desde CORP
+# 11. Validación desde CORP
 
 Desde `LABSERV01`:
 
 ```bash
-curl -I http://10.30.0.20/
+curl -I --connect-timeout 3 http://10.30.0.20/
 ```
 
 y:
@@ -273,7 +363,7 @@ Ambos deben poder alcanzar el servicio correspondiente.
 
 ---
 
-# 11. Validación DMZ → CORP
+# 12. Validación DMZ → CORP
 
 Desde `LINUX01` intenta establecer una conexión hacia un puerto de prueba de `LABSERV01`.
 
@@ -297,7 +387,7 @@ Finaliza el listener después de la prueba.
 
 ---
 
-# 12. Matriz de validación
+# 13. Matriz de validación
 
 Completa:
 
@@ -316,7 +406,7 @@ Se considera terminada cuando la matriz se ha **validado**.
 
 ---
 
-# 13. Análisis de arquitectura
+# 14. Análisis de arquitectura
 
 Responde:
 
