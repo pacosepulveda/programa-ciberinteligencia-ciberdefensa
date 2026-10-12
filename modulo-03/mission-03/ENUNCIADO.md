@@ -28,10 +28,14 @@ DMZ        10.30.0.0/24
 CORP       10.40.0.0/24
 
 KALI01      10.20.0.10
-FW01        10.20.0.1 / 10.30.0.1 / 10.40.0.1
+FW01        10.20.0.254 / 10.30.0.1 / 10.40.0.1
 LINUX01     10.30.0.20
 LABSERV01   10.40.0.30
 ```
+
+La interfaz RED de FW01 es `10.20.0.254`. Si el hipervisor conserva `10.20.0.1` como gateway/NAT de la red creada en M01/M02, esa dirección **no pertenece a FW01**.
+
+Consulta la [topología lógica del M03](../laboratorios/assets/topologia_telvora_m03.svg) como referencia.
 
 Añade al modelo una pequeña carga cloud representada por los recursos revisados en P03.3. No es necesario desplegarla.
 
@@ -45,6 +49,7 @@ Crea un diagrama sencillo que muestre como mínimo:
 - DMZ;
 - CORP;
 - FW01;
+- KALI01;
 - LINUX01;
 - LABSERV01;
 - la carga cloud revisada en P03.3;
