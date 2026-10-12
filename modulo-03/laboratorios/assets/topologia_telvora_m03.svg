@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">Topología lógica del laboratorio TELVORA - Módulo 03</title>
+  <desc id="desc">FW01 interconecta las zonas RED 10.20.0.0/24, DMZ 10.30.0.0/24 y CORP 10.40.0.0/24. KALI01 permanece en RED, LINUX01 pasa de RED a DMZ durante P03.1 y P03.2, y LABSERV01 reside en CORP.</desc>
+  <defs>
+    <style>
+      .title{font:700 38px Arial,sans-serif;fill:#102a43}.h1{font:700 25px Arial,sans-serif;fill:#fff}.h2{font:700 23px Arial,sans-serif;fill:#102a43}.body{font:18px Arial,sans-serif;fill:#243b53}.small{font:15px Arial,sans-serif;fill:#486581}.mono{font:700 18px Consolas,monospace;fill:#102a43}.card{fill:#fff;stroke:#bcccdc;stroke-width:2}.link{fill:none;stroke-width:5;stroke-linecap:round;stroke-linejoin:round}.dash{stroke-dasharray:10 8}.note{font:700 16px Arial,sans-serif}.zoneTitle{font:700 27px Arial,sans-serif;fill:#fff}.zoneSub{font:16px Arial,sans-serif;fill:#fff}.machine{font:700 18px Arial,sans-serif;fill:#102a43}.ip{font:17px Consolas,monospace;fill:#334e68}
+    </style>
+    <marker id="arrowBlue" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#1684d6"/></marker>
+    <marker id="arrowOrange" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#f97316"/></marker>
+    <marker id="arrowGreen" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#16a34a"/></marker>
+  </defs>
+
+  <rect width="1600" height="900" fill="#f8fbfe"/>
+  <text x="800" y="58" text-anchor="middle" class="title">Topología lógica del laboratorio TELVORA · Módulo 03</text>
+
+  <!-- Uplink -->
+  <rect x="615" y="92" width="370" height="82" rx="18" fill="#e8f3fb" stroke="#7b9eb8" stroke-width="2"/>
+  <text x="800" y="125" text-anchor="middle" class="h2">WAN / salida a Internet</text>
+  <text x="800" y="151" text-anchor="middle" class="small">El mecanismo NAT/uplink varía según el hipervisor</text>
+  <path d="M800 174 L800 218" class="link" stroke="#64748b" marker-end="url(#arrowBlue)"/>
+
+  <!-- FW -->
+  <rect x="530" y="222" width="540" height="186" rx="18" fill="#fff" stroke="#dc2626" stroke-width="3"/>
+  <rect x="530" y="222" width="540" height="54" rx="16" fill="#dc2626"/>
+  <rect x="530" y="258" width="540" height="18" fill="#dc2626"/>
+  <text x="800" y="258" text-anchor="middle" class="h1">FW01 · pfSense + Suricata</text>
+  <text x="600" y="311" class="body">WAN</text><text x="760" y="311" class="small">DHCP / uplink</text>
+  <circle cx="578" cy="305" r="7" fill="#64748b"/>
+  <text x="600" y="342" class="body">RED</text><text x="760" y="342" class="mono">10.20.0.254/24</text><circle cx="578" cy="336" r="7" fill="#1684d6"/>
+  <text x="600" y="373" class="body">DMZ</text><text x="760" y="373" class="mono">10.30.0.1/24</text><circle cx="578" cy="367" r="7" fill="#f97316"/>
+  <text x="600" y="404" class="body">CORP</text><text x="760" y="404" class="mono">10.40.0.1/24</text><circle cx="578" cy="398" r="7" fill="#16a34a"/>
+
+  <!-- Interzone links -->
+  <path d="M650 408 L650 460 L290 460 L290 512" class="link" stroke="#1684d6" marker-end="url(#arrowBlue)"/>
+  <path d="M800 408 L800 512" class="link" stroke="#f97316" marker-end="url(#arrowOrange)"/>
+  <path d="M950 408 L950 460 L1310 460 L1310 512" class="link" stroke="#16a34a" marker-end="url(#arrowGreen)"/>
+  <rect x="657" y="432" width="286" height="34" rx="17" fill="#fff" stroke="#cbd5e1"/>
+  <text x="800" y="455" text-anchor="middle" class="note" fill="#475569">Tráfico interzona controlado por FW01</text>
+
+  <!-- RED -->
+  <rect x="35" y="520" width="625" height="292" rx="18" fill="#edf7ff" stroke="#1684d6" stroke-width="3"/>
+  <rect x="35" y="520" width="625" height="64" rx="16" fill="#1684d6"/>
+  <rect x="35" y="566" width="625" height="18" fill="#1684d6"/>
+  <text x="347" y="555" text-anchor="middle" class="zoneTitle">RED · 10.20.0.0/24</text>
+  <text x="347" y="578" text-anchor="middle" class="zoneSub">Red existente de M01/M02</text>
+
+  <rect x="58" y="615" width="135" height="124" rx="12" class="card"/><text x="125" y="654" text-anchor="middle" class="machine">KALI01</text><text x="125" y="683" text-anchor="middle" class="ip">10.20.0.10</text><text x="125" y="713" text-anchor="middle" class="small">permanece en RED</text>
+  <rect x="208" y="615" width="145" height="124" rx="12" class="card"/><text x="280" y="654" text-anchor="middle" class="machine">LINUX01</text><text x="280" y="683" text-anchor="middle" class="ip">10.20.0.20</text><text x="280" y="713" text-anchor="middle" class="small">P03.0A / estado inicial</text>
+  <rect x="368" y="615" width="130" height="124" rx="12" class="card"/><text x="433" y="654" text-anchor="middle" class="machine">AD01</text><text x="433" y="683" text-anchor="middle" class="ip">10.20.0.30</text><text x="433" y="713" text-anchor="middle" class="small">M01/M02</text>
+  <rect x="513" y="615" width="125" height="124" rx="12" class="card"/><text x="575" y="654" text-anchor="middle" class="machine">MEMBER01</text><text x="575" y="683" text-anchor="middle" class="ip">10.20.0.40</text><text x="575" y="713" text-anchor="middle" class="small">M01/M02</text>
+  <text x="347" y="782" text-anchor="middle" class="small">FW01 RED = 10.20.0.254 · El gateway/NAT 10.20.0.1 de M01/M02 no es una interfaz de FW01.</text>
+
+  <!-- DMZ -->
+  <rect x="685" y="520" width="335" height="292" rx="18" fill="#fff5eb" stroke="#f97316" stroke-width="3"/>
+  <rect x="685" y="520" width="335" height="64" rx="16" fill="#f97316"/>
+  <rect x="685" y="566" width="335" height="18" fill="#f97316"/>
+  <text x="852" y="555" text-anchor="middle" class="zoneTitle">DMZ · 10.30.0.0/24</text>
+  <text x="852" y="578" text-anchor="middle" class="zoneSub">Servicios expuestos y controlados</text>
+  <rect x="744" y="618" width="216" height="124" rx="12" class="card"/>
+  <text x="852" y="654" text-anchor="middle" class="machine">LINUX01</text>
+  <text x="852" y="683" text-anchor="middle" class="ip">10.30.0.20</text>
+  <text x="852" y="712" text-anchor="middle" class="small">P03.1 y P03.2</text>
+  <text x="852" y="782" text-anchor="middle" class="small">FW01 DMZ = 10.30.0.1</text>
+
+  <!-- move arrow -->
+  <path d="M350 675 C500 750,610 750,740 682" class="link dash" stroke="#f97316" marker-end="url(#arrowOrange)"/>
+  <rect x="465" y="735" width="232" height="35" rx="17" fill="#fff7ed" stroke="#fb923c"/>
+  <text x="581" y="758" text-anchor="middle" class="note" fill="#c2410c">cambio temporal para P03.1/P03.2</text>
+
+  <!-- CORP -->
+  <rect x="1045" y="520" width="520" height="292" rx="18" fill="#effbf2" stroke="#16a34a" stroke-width="3"/>
+  <rect x="1045" y="520" width="520" height="64" rx="16" fill="#16a34a"/>
+  <rect x="1045" y="566" width="520" height="18" fill="#16a34a"/>
+  <text x="1305" y="555" text-anchor="middle" class="zoneTitle">CORP · 10.40.0.0/24</text>
+  <text x="1305" y="578" text-anchor="middle" class="zoneSub">Servicios corporativos / administración</text>
+  <rect x="1177" y="618" width="256" height="124" rx="12" class="card"/>
+  <text x="1305" y="654" text-anchor="middle" class="machine">LABSERV01</text>
+  <text x="1305" y="683" text-anchor="middle" class="ip">10.40.0.30</text>
+  <text x="1305" y="712" text-anchor="middle" class="small">servidor multipropósito</text>
+  <text x="1305" y="782" text-anchor="middle" class="small">FW01 CORP = 10.40.0.1</text>
+
+  <!-- Footer -->
+  <rect x="120" y="838" width="1360" height="42" rx="12" fill="#eef2f7" stroke="#cbd5e1"/>
+  <text x="800" y="864" text-anchor="middle" class="small">Los nombres de las redes cambian según VirtualBox, VMware, KVM/libvirt o Proxmox; el direccionamiento lógico se mantiene.</text>
+</svg>
