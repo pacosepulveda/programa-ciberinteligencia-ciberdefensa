@@ -4,7 +4,7 @@
 **Programa:** Programa Avanzado de Ciberinteligencia y Ciberdefensa  
 **Empresa ficticia:** Telvora Communications (TELVORA)  
 **Entorno:** Telvora Cyber Range  
-**Dominio de laboratorio:** `telvora.test`
+**Dominio de laboratorio:** `telvora.lab`
 
 En este módulo el objetivo es pasar del análisis de riesgo a la **implementación y validación de una arquitectura defensiva**.
 
@@ -56,6 +56,58 @@ Conceptos: responsabilidad compartida, IaC, policy-as-code, guardrails, DevSecOp
 
 ## Entorno de laboratorio
 
+![Topología lógica del laboratorio TELVORA](assets/topologia_telvora_m03.svg)
+
+La topología lógica es la misma con independencia del hipervisor. Los nombres de las redes virtuales cambian, pero el direccionamiento y las zonas de seguridad se mantienen.
+
+### Plan de direccionamiento
+
+| Zona | Red | Interfaz de FW01 | Hosts relevantes |
+|---|---|---|---|
+| RED | `10.20.0.0/24` | `10.20.0.254` | KALI01 `.10`, LINUX01 `.20` inicialmente, AD01 `.30`, MEMBER01 `.40` |
+| DMZ | `10.30.0.0/24` | `10.30.0.1` | LINUX01 `.20` durante P03.1 y P03.2 |
+| CORP | `10.40.0.0/24` | `10.40.0.1` | LABSERV01 `.30` |
+
+> **Importante:** `10.20.0.1` sigue siendo el gateway/NAT de la red de laboratorio creada en M01/M02 cuando el hipervisor lo utiliza. **No es una interfaz de FW01.** La interfaz RED de FW01 es `10.20.0.254`.
+
+### Equivalencia de redes por hipervisor
+
+| Zona | VirtualBox | VMware Workstation | KVM/libvirt | Proxmox |
+|---|---|---|---|---|
+| RED | `TELVORA-M01` | `VMnet1` | `telvora-lab` | `vmbr20` |
+| DMZ | `TELVORA-DMZ` | `VMnet2` | `telvora-dmz` | `vmbr30` |
+| CORP | `TELVORA-CORP` | `VMnet3` | `telvora-corp` | `vmbr40` |
+
+La salida a Internet/WAN puede variar según el hipervisor y queda fuera de las pruebas de segmentación. El **tráfico entre RED, DMZ y CORP** debe atravesar FW01.
+
+### Transición de LINUX01
+
+En P03.0A, LINUX01 permanece en la red original:
+
+```text
+KALI01   10.20.0.10  RED
+LINUX01  10.20.0.20  RED
+```
+
+Antes de P03.1, y siguiendo las indicaciones del instructor, LINUX01 pasa temporalmente a DMZ:
+
+```text
+LINUX01  10.30.0.20/24
+Gateway  10.30.0.1
+```
+
+KALI01 permanece en RED y utiliza FW01 (`10.20.0.254`) como siguiente salto para alcanzar DMZ y CORP.
+
+### Acceso de administración a FW01
+
+Desde KALI01:
+
+```text
+https://10.20.0.254
+```
+
+El acceso se realiza desde RED; no es necesario conectar el host físico a CORP.
+
 ### P03.0A
 
 Utiliza:
@@ -63,14 +115,6 @@ Utiliza:
 ```text
 KALI01
 LINUX01
-```
-
-Red de referencia:
-
-```text
-10.20.0.0/24
-KALI01   10.20.0.10
-LINUX01  10.20.0.20
 ```
 
 ### P03.0B
@@ -83,41 +127,30 @@ KALI01
 
 Requiere Python 3, los archivos del repositorio y un editor de texto. No se despliega infraestructura cloud.
 
-### P03.1 y P03.2
+### P03.1
 
-Utilizan la topología segmentada del Telvora Cyber Range:
+Utiliza:
 
 ```text
-                    TELVORA CYBER RANGE
-
-              RED
-            10.20.0.0/24
-                  |
-           KALI01 .10
-                  |
-              10.20.0.1
-              +---------+
-              |         |
-              |  FW01   |
-              | pfSense |
-              |         |
-              +---------+
-         10.30.0.1     10.40.0.1
-             |              |
-             |              |
-          DMZ |              | CORP
-   10.30.0.0/24              10.40.0.0/24
-             |              |
-        LINUX01 .20      LABSERV01 .30
+FW01
+KALI01
+LINUX01
+LABSERV01 en la fase CORP/DMZ
 ```
 
-Plan de direccionamiento:
+Para equipos con memoria limitada, LABSERV01 puede arrancarse después de apagar KALI01.
 
-| Zona | Red | Gateway |
-|---|---|---|
-| RED | `10.20.0.0/24` | `10.20.0.1` |
-| DMZ | `10.30.0.0/24` | `10.30.0.1` |
-| CORP | `10.40.0.0/24` | `10.40.0.1` |
+### P03.2
+
+Utiliza la topología segmentada ya preparada en P03.1:
+
+```text
+FW01
+LINUX01   10.30.0.20  DMZ
+LABSERV01 10.40.0.30  CORP
+```
+
+Suricata está **preinstalado** en FW01, pero su configuración forma parte de la práctica.
 
 ### P03.3
 
