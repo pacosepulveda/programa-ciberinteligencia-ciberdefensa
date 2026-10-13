@@ -1,0 +1,9 @@
+identity,requested_role,approval_recorded,review_frequency,last_review,jit_enabled,strong_auth_required,source_restricted
+alice.admin,Domain administration,yes,quarterly,2026-07-01,false,yes,yes
+bob.ops,Server administration,yes,annual,2025-12-15,false,yes,no
+carla.net,Network operations,yes,annual,2026-01-15,false,yes,yes
+svc_backup,Backup operations,yes,annual,2025-10-01,false,n/a,yes
+svc_legacy,Legacy service,unknown,unknown,,false,n/a,no
+vendor_noc,NOC vendor,yes,annual,2026-01-05,false,yes,no
+breakglass01,Emergency administration,yes,annual,2026-01-05,false,no,no
+former.contractor,Contractor access,no,none,,false,no,no
