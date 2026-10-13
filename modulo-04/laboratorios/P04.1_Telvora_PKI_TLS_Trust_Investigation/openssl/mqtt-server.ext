@@ -1,0 +1,4 @@
+basicConstraints=critical,CA:FALSE
+keyUsage=critical,digitalSignature,keyEncipherment
+extendedKeyUsage=serverAuth
+subjectAltName=DNS:mqtt.telvora.test,IP:10.30.0.20
