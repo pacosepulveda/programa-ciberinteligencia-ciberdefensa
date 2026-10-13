@@ -1,0 +1,6 @@
+dataset,example_fields,storage,retention,consumers,notes
+customer-profile,"customer_id,name,email,segment",PostgreSQL,7 years,"CODG API;CRM connector",Used in customer operations
+network-events,"customer_id,device_id,timestamp,event_type",PostgreSQL,400 days,"CODG API;analytics",High volume operational telemetry
+iot-telemetry,"device_id,site,power,temp,timestamp",MQTT + downstream DB,90 days,"operations;analytics",Contains site/device operational context
+api-access-log,"timestamp,subject,client_id,path,status,source_ip",log store,30 days,"SOC;platform",Partner calls and customer operations
+backup-export,"customer_id,email,service_state",object storage,30 days,"backup service",Encrypted archive
