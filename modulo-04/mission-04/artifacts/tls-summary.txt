@@ -1,0 +1,15 @@
+CODG TLS REVIEW SNAPSHOT
+========================
+Public API hostname: codg.telvora.test
+TLS enabled: yes
+Minimum protocol: TLS 1.2
+Certificate issuer: Telvora Internal Services CA
+Certificate SAN: DNS:codg.telvora.test
+Certificate validity: 395 days
+Server private key storage: local filesystem on workload
+Private-key file permissions: 0600
+Automated certificate rotation: no
+Revocation checking from internal clients: inconsistent
+mTLS for partner-app: no
+Backend DB channel encryption: yes
+MQTT channel encryption: yes
