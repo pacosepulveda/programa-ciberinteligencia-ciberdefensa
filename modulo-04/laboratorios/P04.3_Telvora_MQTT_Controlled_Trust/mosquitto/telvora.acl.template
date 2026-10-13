@@ -1,0 +1,5 @@
+user sensor01
+topic write telvora/site01/sensor/#
+
+user analyst01
+topic read telvora/site01/#
