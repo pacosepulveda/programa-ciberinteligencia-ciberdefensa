@@ -1,0 +1,6 @@
+identity,type,authn,privilege,standing,source_restriction,review,notes
+codg-runtime,service,static client secret,"read/write customer DB; publish MQTT",yes,workload subnet,annual,Secret rotated manually
+partner-app,oauth-client,client secret,"invoke selected API",yes,internet,annual,Token lifetime 24h
+alice.admin,human,MFA,"CODG admin",yes,admin network,quarterly,Named administrator
+vendor_noc,vendor,MFA,"support read + restart",yes,internet VPN,annual,No automatic expiration in record
+breakglass01,emergency,password,"full admin",yes,none,annual,Use requires manual process
