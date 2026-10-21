@@ -1,7 +1,6 @@
 # P04.2 — IAM Privilege & Identity Audit
 ## Standing privilege, group nesting y gobierno técnico de identidad
 
-**Duración:** 45–60 minutos  
 **Objetivo:** auditar identidades y privilegios de TELVORA y diseñar un target state que reduzca exposición permanente.
 
 Esta práctica no consiste en explotar Active Directory. Se trabaja **gobierno técnico de identidad, privilegios efectivos y evidencia**.
