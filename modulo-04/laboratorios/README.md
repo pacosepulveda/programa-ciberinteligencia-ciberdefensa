@@ -14,13 +14,15 @@ Los laboratorios reutilizan exclusivamente las máquinas previstas en el **Telvo
 ## Direccionamiento de referencia
 
 ```text
-FW01 RED   10.20.0.1
+FW01 RED   10.20.0.254
 FW01 DMZ   10.30.0.1
 
 KALI01     10.20.0.10
 LINUX01    10.30.0.20
 AD01       10.40.0.10
 ```
+
+> `10.20.0.1` puede seguir existiendo como gateway/NAT de la red de laboratorio heredada de M01/M02, pero **no es una interfaz de FW01**.
 
 Adapta las direcciones únicamente si el instructor indica que tu entorno utiliza otras.
 
