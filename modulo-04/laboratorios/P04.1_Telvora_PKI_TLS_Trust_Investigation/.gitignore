@@ -1,0 +1,11 @@
+# Material criptográfico generado durante P04.1
+*.key
+*.csr
+*.srl
+
+# Evidencias locales del alumno
+ca/
+portal/
+mqtt/
+clients/
+evidence/
