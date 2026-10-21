@@ -1,7 +1,6 @@
 # P04.3 — MQTT: Cleartext → Controlled Trust
 ## De tráfico IoT en claro a TLS/mTLS y autorización por tópico
 
-**Duración:** 50–65 minutos  
 **Máquinas de trabajo:** `KALI01` + `LINUX01`  
 **Infraestructura de red:** `FW01`
 
@@ -33,6 +32,23 @@ KALI01                               LINUX01
 ```
 
 `FW01` forma parte de la infraestructura del laboratorio porque RED y DMZ son redes separadas. No es una máquina de trabajo principal, pero debe estar encendida y enrutar el tráfico autorizado entre ambas zonas.
+
+En la topología utilizada desde M03:
+
+```text
+FW01 RED = 10.20.0.254
+FW01 DMZ = 10.30.0.1
+```
+
+Si `10.20.0.1` sigue existiendo como gateway/NAT de la red original del laboratorio, **no es una interfaz de FW01**.
+
+Antes de comenzar, comprueba desde `KALI01` que la ruta hacia DMZ utiliza FW01:
+
+```bash
+ip route get 10.30.0.20
+```
+
+El siguiente salto debe ser `10.20.0.254`.
 
 ### Flujos necesarios
 
@@ -147,6 +163,8 @@ Utiliza las plantillas:
 - [`mosquitto/telvora.acl.template`](mosquitto/telvora.acl.template)
 
 Adapta las rutas a tu entorno y valida la sintaxis/configuración antes de considerar finalizada la fase.
+
+> En Mosquitto actual, `tls_version tlsv1.2` establece la **versión mínima**; TLS 1.3 puede negociarse si cliente y servidor lo soportan. Comprueba la versión realmente negociada en la evidencia.
 
 ## 7. Política de autorización
 
