@@ -1,7 +1,6 @@
 # P04.1 — PKI & TLS Trust Investigation
 ## Certificados, SAN, cadena de confianza, diagnóstico TLS y material de identidad para MQTT
 
-**Duración:** 55–70 minutos  
 **Máquina de trabajo:** `KALI01` o `LINUX01`  
 **Internet:** no requerido
 
@@ -29,6 +28,8 @@ El objetivo no es desplegar una PKI corporativa completa. Debes comprender qué 
 
 ## 2. Directorio de trabajo
 
+Crea la estructura de trabajo y comprueba la versión de OpenSSL:
+
 ```bash
 mkdir -p ~/labs/m04/pki/{ca,portal,mqtt,clients,evidence}
 cd ~/labs/m04/pki
@@ -39,14 +40,36 @@ Registra la versión de OpenSSL utilizada.
 
 ## 3. CA de laboratorio
 
-Crea una clave privada RSA de 3072 bits y un certificado raíz autofirmado con:
+Crea una clave privada RSA de 3072 bits para la CA:
+
+```bash
+openssl genrsa -out ca/telvora-root-ca.key 3072
+chmod 600 ca/telvora-root-ca.key
+```
+
+Genera un certificado raíz autofirmado con:
 
 ```text
 CN=Telvora Training Root CA
 O=Telvora Communications
 ```
 
-Protege la clave privada con permisos adecuados.
+Puedes utilizar:
+
+```bash
+openssl req -x509 -new -sha256 \
+  -key ca/telvora-root-ca.key \
+  -days 3650 \
+  -out ca/telvora-root-ca.crt \
+  -subj "/O=Telvora Communications/CN=Telvora Training Root CA"
+```
+
+Comprueba el material generado:
+
+```bash
+openssl x509 -in ca/telvora-root-ca.crt -noout -subject -issuer -dates
+ls -l ca/
+```
 
 Documenta:
 
@@ -71,9 +94,39 @@ Crea para `portal.telvora.test`:
 - SAN `DNS:portal.telvora.test`;
 - Extended Key Usage adecuado para servidor.
 
-Puedes usar [`openssl/server-san.ext`](openssl/server-san.ext) como fichero de extensiones.
+Genera la clave privada y la CSR:
 
-Inspecciona el certificado y registra en `evidence/certificate-analysis.txt`:
+```bash
+openssl genrsa -out portal/portal.key 2048
+chmod 600 portal/portal.key
+
+openssl req -new \
+  -key portal/portal.key \
+  -out portal/portal.csr \
+  -subj "/O=Telvora Communications/CN=portal.telvora.test"
+```
+
+Utiliza [`openssl/server-san.ext`](openssl/server-san.ext) como fichero de extensiones para emitir el certificado:
+
+```bash
+openssl x509 -req \
+  -in portal/portal.csr \
+  -CA ca/telvora-root-ca.crt \
+  -CAkey ca/telvora-root-ca.key \
+  -CAcreateserial \
+  -days 365 \
+  -sha256 \
+  -extfile openssl/server-san.ext \
+  -out portal/portal.crt
+```
+
+Inspecciona el certificado:
+
+```bash
+openssl x509 -in portal/portal.crt -noout -text
+```
+
+Registra en `evidence/certificate-analysis.txt`:
 
 - subject;
 - issuer;
@@ -114,7 +167,36 @@ certificado confiable para un cliente concreto
 
 ## 6. Servicio TLS temporal
 
-Levanta un servicio temporal con `openssl s_server` utilizando el certificado de `portal.telvora.test` y conéctate desde otro terminal mediante `openssl s_client`.
+Abre un primer terminal en el directorio de trabajo y levanta un servicio TLS temporal:
+
+```bash
+cd ~/labs/m04/pki
+openssl s_server \
+  -accept 8443 \
+  -cert portal/portal.crt \
+  -key portal/portal.key \
+  -www
+```
+
+En un segundo terminal conéctate primero sin indicar la CA:
+
+```bash
+openssl s_client \
+  -connect 127.0.0.1:8443 \
+  -servername portal.telvora.test \
+  </dev/null
+```
+
+Después repite la prueba indicando expresamente la CA de confianza:
+
+```bash
+openssl s_client \
+  -connect 127.0.0.1:8443 \
+  -servername portal.telvora.test \
+  -CAfile ca/telvora-root-ca.crt \
+  -verify_hostname portal.telvora.test \
+  </dev/null
+```
 
 Obtén evidencia de:
 
@@ -142,6 +224,41 @@ Provoca y documenta **al menos tres** de los siguientes casos:
 6. incompatibilidad de versión/cipher;
 7. mTLS exigido sin certificado cliente.
 
+Para los casos ejecutables directamente en este entorno puedes utilizar como referencia:
+
+### CA no confiable
+
+```bash
+openssl s_client \
+  -connect 127.0.0.1:8443 \
+  -servername portal.telvora.test \
+  </dev/null
+```
+
+### Hostname mismatch
+
+```bash
+openssl s_client \
+  -connect 127.0.0.1:8443 \
+  -servername wrong.telvora.test \
+  -CAfile ca/telvora-root-ca.crt \
+  -verify_hostname wrong.telvora.test \
+  </dev/null
+```
+
+### Trust store correcto
+
+```bash
+openssl s_client \
+  -connect 127.0.0.1:8443 \
+  -servername portal.telvora.test \
+  -CAfile ca/telvora-root-ca.crt \
+  -verify_hostname portal.telvora.test \
+  </dev/null
+```
+
+No basta con copiar el mensaje de error: interpreta qué propiedad de confianza ha fallado.
+
 Para cada caso utiliza:
 
 ```text
@@ -161,12 +278,30 @@ La misma CA emitirá ahora las identidades que utilizará el laboratorio MQTT.
 
 ### 8.1 Broker `mqtt.telvora.test`
 
-Crea:
+Crea la clave y la CSR:
 
-```text
-mqtt/mqtt.key
-mqtt/mqtt.csr
-mqtt/mqtt.crt
+```bash
+openssl genrsa -out mqtt/mqtt.key 2048
+chmod 600 mqtt/mqtt.key
+
+openssl req -new \
+  -key mqtt/mqtt.key \
+  -out mqtt/mqtt.csr \
+  -subj "/O=Telvora Communications/CN=mqtt.telvora.test"
+```
+
+Emite el certificado utilizando [`openssl/mqtt-server.ext`](openssl/mqtt-server.ext):
+
+```bash
+openssl x509 -req \
+  -in mqtt/mqtt.csr \
+  -CA ca/telvora-root-ca.crt \
+  -CAkey ca/telvora-root-ca.key \
+  -CAcreateserial \
+  -days 365 \
+  -sha256 \
+  -extfile openssl/mqtt-server.ext \
+  -out mqtt/mqtt.crt
 ```
 
 El certificado debe tener:
@@ -177,16 +312,28 @@ SAN=DNS:mqtt.telvora.test,IP:10.30.0.20
 Extended Key Usage=serverAuth
 ```
 
-Utiliza [`openssl/mqtt-server.ext`](openssl/mqtt-server.ext) como extensiones de referencia.
-
 ### 8.2 Cliente `sensor01`
 
 Crea:
 
-```text
-clients/sensor01.key
-clients/sensor01.csr
-clients/sensor01.crt
+```bash
+openssl genrsa -out clients/sensor01.key 2048
+chmod 600 clients/sensor01.key
+
+openssl req -new \
+  -key clients/sensor01.key \
+  -out clients/sensor01.csr \
+  -subj "/O=Telvora Communications/CN=sensor01"
+
+openssl x509 -req \
+  -in clients/sensor01.csr \
+  -CA ca/telvora-root-ca.crt \
+  -CAkey ca/telvora-root-ca.key \
+  -CAcreateserial \
+  -days 365 \
+  -sha256 \
+  -extfile openssl/client-auth.ext \
+  -out clients/sensor01.crt
 ```
 
 El certificado debe identificar exactamente:
@@ -200,10 +347,24 @@ Extended Key Usage=clientAuth
 
 Crea:
 
-```text
-clients/analyst01.key
-clients/analyst01.csr
-clients/analyst01.crt
+```bash
+openssl genrsa -out clients/analyst01.key 2048
+chmod 600 clients/analyst01.key
+
+openssl req -new \
+  -key clients/analyst01.key \
+  -out clients/analyst01.csr \
+  -subj "/O=Telvora Communications/CN=analyst01"
+
+openssl x509 -req \
+  -in clients/analyst01.csr \
+  -CA ca/telvora-root-ca.crt \
+  -CAkey ca/telvora-root-ca.key \
+  -CAcreateserial \
+  -days 365 \
+  -sha256 \
+  -extfile openssl/client-auth.ext \
+  -out clients/analyst01.crt
 ```
 
 El certificado debe identificar exactamente:
@@ -213,13 +374,17 @@ CN=analyst01
 Extended Key Usage=clientAuth
 ```
 
-Para ambos certificados cliente puedes utilizar [`openssl/client-auth.ext`](openssl/client-auth.ext).
-
 > Los CN `sensor01` y `analyst01` son intencionados: P04.3 utilizará la identidad del certificado como identidad MQTT para aplicar ACL diferentes.
 
 ## 9. Validación del material MQTT
 
-Valida explícitamente los tres certificados contra la CA del laboratorio.
+Valida explícitamente los tres certificados contra la CA del laboratorio:
+
+```bash
+openssl verify -CAfile ca/telvora-root-ca.crt mqtt/mqtt.crt
+openssl verify -CAfile ca/telvora-root-ca.crt clients/sensor01.crt
+openssl verify -CAfile ca/telvora-root-ca.crt clients/analyst01.crt
+```
 
 Debes obtener evidencia equivalente a:
 
@@ -229,7 +394,14 @@ clients/sensor01.crt: OK
 clients/analyst01.crt: OK
 ```
 
-Comprueba también que cada private key corresponde a su certificado comparando la clave pública derivada de ambos artefactos.
+Comprueba también que cada private key corresponde a su certificado comparando la clave pública derivada de ambos artefactos. Por ejemplo, para `mqtt`:
+
+```bash
+openssl pkey -in mqtt/mqtt.key -pubout -outform pem | sha256sum
+openssl x509 -in mqtt/mqtt.crt -pubkey -noout | sha256sum
+```
+
+Los dos hashes deben coincidir. Repite la comprobación para `sensor01` y `analyst01`.
 
 Documenta:
 
