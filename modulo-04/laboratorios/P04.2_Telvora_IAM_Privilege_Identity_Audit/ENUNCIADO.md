@@ -5,7 +5,7 @@
 
 Esta práctica no consiste en explotar Active Directory. Se trabaja **gobierno técnico de identidad, privilegio efectivo, mínimo privilegio y evidencia**.
 
-La máquina principal de trabajo será **MEMBER01**, con Windows Server 2025 Standard Desktop Experience. `AD01` seguirá actuando como controlador de dominio Samba AD de `telvora.lab`.
+La investigación se realizará desde **MEMBER01**, con Windows Server 2025 Standard Desktop Experience. `AD01` seguirá actuando como controlador de dominio Samba AD de `telvora.lab`.
 
 ---
 
@@ -18,59 +18,46 @@ AD01
 MEMBER01
 ```
 
-Trabaja desde **MEMBER01** durante toda la práctica.
-
-Inicia sesión en MEMBER01 con la cuenta administrativa del dominio TELVORA proporcionada para el laboratorio y abre **Windows PowerShell como administrador**.
+La preparación inicial del escenario se realiza una sola vez en **AD01**. Después, toda la auditoría se realiza desde **MEMBER01** con Active Directory Users and Computers.
 
 > Para administrar el Samba AD utiliza **Active Directory Users and Computers** (`dsa.msc`). No utilices Active Directory Administrative Center (`dsac.exe`).
 
-La imagen de MEMBER01 utilizada para la práctica debe tener **Active Directory Users and Computers** instalado previamente.
-
 ---
 
-## 2. Preparar el escenario desde MEMBER01
+## 2. Preparar el escenario en AD01
 
 El directorio del laboratorio contiene:
 
 ```text
-prepare_p04_2.ps1
+prepare_p04_2_samba_ad.sh
 ```
 
-Sitúate en el directorio donde hayas clonado o copiado el repositorio del curso:
+En AD01, sitúate en el directorio del laboratorio y ejecuta:
 
-```powershell
-cd .\programa-ciberinteligencia-ciberdefensa\modulo-04\laboratorios\P04.2_Telvora_IAM_Privilege_Identity_Audit
+```bash
+chmod +x prepare_p04_2_samba_ad.sh
+sudo ./prepare_p04_2_samba_ad.sh
 ```
 
-Permite la ejecución del script únicamente para la sesión actual:
+El script utiliza `samba-tool` para preparar las identidades, grupos y memberships necesarios para el escenario.
 
-```powershell
-Set-ExecutionPolicy -Scope Process Bypass
+La salida normal es:
+
+```text
+[P04.2] Validando AD01 y preparando el escenario IAM...
+[P04.2] Escenario preparado correctamente.
+[P04.2] Continua la practica desde MEMBER01 con Active Directory Users and Computers (dsa.msc).
 ```
 
-Ejecuta:
-
-```powershell
-.\prepare_p04_2.ps1
-```
-
-El script:
-
-- comprueba que MEMBER01 pertenece a `telvora.lab`;
-- comprueba que se ejecuta con privilegios administrativos;
-- comprueba que `dsa.msc` está disponible;
-- valida la conectividad LDAP con el controlador de dominio;
-- prepara los objetos necesarios para el escenario.
-
-El script **no instala RSAT ni modifica características de Windows Server**. Si `dsa.msc` no está disponible, la VM debe prepararse antes de realizar la práctica.
-
-El script solo muestra mensajes genéricos para no revelar la estructura que debes investigar.
+El script es idempotente: puede ejecutarse de nuevo sin duplicar usuarios, grupos o memberships.
 
 A partir de este momento, **no modifiques cuentas, grupos ni contraseñas durante la fase de auditoría**.
 
 ---
 
-## 3. Abrir Active Directory Users and Computers
+## 3. Abrir Active Directory Users and Computers en MEMBER01
+
+Inicia sesión en MEMBER01 con la cuenta administrativa del dominio TELVORA.
 
 Desde MEMBER01 pulsa:
 
