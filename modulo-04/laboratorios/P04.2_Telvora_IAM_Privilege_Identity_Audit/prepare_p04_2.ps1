@@ -6,8 +6,6 @@ $ErrorActionPreference = 'Stop'
 $TargetDomain = 'telvora.lab'
 $TargetNetBIOS = 'TELVORA'
 $TargetDC = 'ad01.telvora.lab'
-$DomainDN = 'DC=telvora,DC=lab'
-$UsersDN = "CN=Users,$DomainDN"
 
 function Write-LabMessage {
     param([Parameter(Mandatory)][string]$Message)
@@ -27,7 +25,7 @@ function Require-Command {
     }
 }
 
-function Invoke-DS {
+function Invoke-External {
     param(
         [Parameter(Mandatory)][string]$Command,
         [Parameter(Mandatory)][string[]]$Arguments
@@ -73,13 +71,16 @@ function Ensure-User {
 
     $dn = Get-UserDN $Sam
     if (-not $dn) {
-        $dn = "CN=$Sam,$UsersDN"
         $pwd = New-RandomLabPassword
-        Invoke-DS 'dsadd.exe' @('user', $dn, '-samid', $Sam, '-upn', "$Sam@$TargetDomain", '-pwd', $pwd, '-disabled', 'no') | Out-Null
+        Invoke-External 'net.exe' @('user', $Sam, $pwd, '/add', '/domain', '/active:yes') | Out-Null
+        $dn = Get-UserDN $Sam
+        if (-not $dn) {
+            throw "No se pudo localizar el usuario $Sam despues de crearlo."
+        }
     }
 
-    Invoke-DS 'dsmod.exe' @('user', $dn, '-pwdneverexpires', $(if ($PasswordNeverExpires) { 'yes' } else { 'no' })) | Out-Null
-    Invoke-DS 'dsmod.exe' @('user', $dn, '-disabled', $(if ($Disabled) { 'yes' } else { 'no' })) | Out-Null
+    Invoke-External 'dsmod.exe' @('user', $dn, '-pwdneverexpires', $(if ($PasswordNeverExpires) { 'yes' } else { 'no' })) | Out-Null
+    Invoke-External 'dsmod.exe' @('user', $dn, '-disabled', $(if ($Disabled) { 'yes' } else { 'no' })) | Out-Null
 }
 
 function Ensure-Group {
@@ -87,8 +88,11 @@ function Ensure-Group {
 
     $dn = Get-GroupDN $Sam
     if (-not $dn) {
-        $dn = "CN=$Sam,$UsersDN"
-        Invoke-DS 'dsadd.exe' @('group', $dn, '-samid', $Sam, '-secgrp', 'yes', '-scope', 'g') | Out-Null
+        Invoke-External 'net.exe' @('group', $Sam, '/add', '/domain') | Out-Null
+        $dn = Get-GroupDN $Sam
+        if (-not $dn) {
+            throw "No se pudo localizar el grupo $Sam despues de crearlo."
+        }
     }
 }
 
@@ -113,7 +117,7 @@ function Ensure-Membership {
 
     $normalized = @($members | ForEach-Object { ([string]$_).Trim().Trim('"') })
     if ($normalized -notcontains $memberDN) {
-        Invoke-DS 'dsmod.exe' @('group', $groupDN, '-addmbr', $memberDN) | Out-Null
+        Invoke-External 'dsmod.exe' @('group', $groupDN, '-addmbr', $memberDN) | Out-Null
     }
 }
 
@@ -123,8 +127,8 @@ if (-not (Test-Path "$env:SystemRoot\System32\dsa.msc")) {
     Stop-Lab 'Active Directory Users and Computers (dsa.msc) no esta instalado.'
 }
 
+Require-Command 'net.exe'
 Require-Command 'dsquery.exe'
-Require-Command 'dsadd.exe'
 Require-Command 'dsmod.exe'
 Require-Command 'dsget.exe'
 
