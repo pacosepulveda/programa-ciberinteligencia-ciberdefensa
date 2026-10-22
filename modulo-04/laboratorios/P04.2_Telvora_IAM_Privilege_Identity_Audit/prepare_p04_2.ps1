@@ -22,7 +22,7 @@ function Stop-Lab {
 
 function Test-IsAdministrator {
     $identity = [Security.Principal.WindowsIdentity]::GetCurrent()
-    $principal = New-Object Security.Principal.WindowsPrincipal($identity)
+    $principal = [Security.Principal.WindowsPrincipal]::new($identity)
     return $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
 }
 
@@ -34,7 +34,7 @@ function Escape-LdapFilterValue {
 function New-LdapEntry {
     param([Parameter(Mandatory)][string]$DistinguishedName)
 
-    return New-Object System.DirectoryServices.DirectoryEntry(
+    return [System.DirectoryServices.DirectoryEntry]::new(
         "LDAP://$TargetDC/$DistinguishedName",
         $null,
         $null,
@@ -46,7 +46,7 @@ function Find-DirectoryObject {
     param([Parameter(Mandatory)][string]$SamAccountName)
 
     $escaped = Escape-LdapFilterValue $SamAccountName
-    $searcher = New-Object System.DirectoryServices.DirectorySearcher($script:DomainRoot)
+    $searcher = [System.DirectoryServices.DirectorySearcher]::new($script:DomainRoot)
     $searcher.SearchScope = [System.DirectoryServices.SearchScope]::Subtree
     $searcher.PageSize = 1000
     $searcher.Filter = "(sAMAccountName=$escaped)"
