@@ -24,6 +24,8 @@ Inicia sesión en MEMBER01 con la cuenta administrativa del dominio TELVORA prop
 
 > Para administrar el Samba AD utiliza **Active Directory Users and Computers** (`dsa.msc`). No utilices Active Directory Administrative Center (`dsac.exe`).
 
+La imagen de MEMBER01 utilizada para la práctica debe tener **Active Directory Users and Computers** instalado previamente.
+
 ---
 
 ## 2. Preparar el escenario desde MEMBER01
@@ -56,9 +58,11 @@ El script:
 
 - comprueba que MEMBER01 pertenece a `telvora.lab`;
 - comprueba que se ejecuta con privilegios administrativos;
-- instala `RSAT-AD-Tools` si todavía no está instalado;
+- comprueba que `dsa.msc` está disponible;
 - valida la conectividad LDAP con el controlador de dominio;
 - prepara los objetos necesarios para el escenario.
+
+El script **no instala RSAT ni modifica características de Windows Server**. Si `dsa.msc` no está disponible, la VM debe prepararse antes de realizar la práctica.
 
 El script solo muestra mensajes genéricos para no revelar la estructura que debes investigar.
 
