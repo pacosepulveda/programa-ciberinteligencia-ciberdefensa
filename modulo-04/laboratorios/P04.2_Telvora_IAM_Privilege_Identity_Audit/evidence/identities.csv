@@ -1,9 +1,0 @@
-identity,type,enabled,last_logon,password_never_expires,account_expires,business_owner,notes
-alice.admin,user,true,2026-10-12,false,,IT Security,Cuenta administrativa nominativa
-bob.ops,user,true,2026-10-11,false,,Operations,Operador de servidores
-carla.net,user,true,2026-10-10,false,,Network,Operadora de red
-svc_backup,service,true,2026-10-13,true,,Backup Team,Usada por tareas de backup
-svc_legacy,service,true,2024-03-18,true,,Unknown,Aplicación legacy sin owner confirmado
-vendor_noc,vendor,true,2026-09-28,false,,NOC,Cuenta de proveedor
-breakglass01,emergency,true,2026-02-02,true,,Security,Cuenta de emergencia
-former.contractor,contractor,false,2025-11-04,false,2025-12-31,Unknown,Contrato finalizado
