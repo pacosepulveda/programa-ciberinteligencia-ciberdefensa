@@ -17,14 +17,12 @@ if [[ ${EUID} -ne 0 ]]; then
 fi
 
 command -v samba-tool >/dev/null 2>&1 || fail "No se encuentra samba-tool."
+command -v base64 >/dev/null 2>&1 || fail "No se encuentra base64."
 
 DOMAIN_INFO="$(samba-tool domain info 127.0.0.1 2>/dev/null || true)"
 if ! grep -Eqi "Domain[[:space:]]*:[[:space:]]*${TARGET_DOMAIN//./\.}" <<<"${DOMAIN_INFO}"; then
-  printf '%s\n' "${DOMAIN_INFO}"
-  fail "Este script solo debe ejecutarse en el DC del dominio ${TARGET_DOMAIN}."
+  fail "Este script solo debe ejecutarse en el DC del laboratorio TELVORA."
 fi
-
-log "Dominio validado: ${TARGET_DOMAIN}"
 
 user_exists() {
   samba-tool user list 2>/dev/null | grep -Fxiq -- "$1"
@@ -44,10 +42,7 @@ ensure_user() {
   local user="$1"
   local password="$2"
 
-  if user_exists "$user"; then
-    log "Usuario ya existente: $user"
-  else
-    log "Creando usuario: $user"
+  if ! user_exists "$user"; then
     samba-tool user create "$user" "$password" >/dev/null
   fi
 }
@@ -55,10 +50,7 @@ ensure_user() {
 ensure_group() {
   local group="$1"
 
-  if group_exists "$group"; then
-    log "Grupo ya existente: $group"
-  else
-    log "Creando grupo: $group"
+  if ! group_exists "$group"; then
     samba-tool group add "$group" >/dev/null
   fi
 }
@@ -67,84 +59,74 @@ ensure_member() {
   local group="$1"
   local member="$2"
 
-  if member_exists "$group" "$member"; then
-    log "Membresía ya existente: $group <- $member"
-  else
-    log "Añadiendo membresía: $group <- $member"
+  if ! member_exists "$group" "$member"; then
     samba-tool group addmembers "$group" "$member" >/dev/null
   fi
 }
 
-set_noexpiry() {
-  local user="$1"
-  log "Configurando sin expiración: $user"
-  samba-tool user setexpiry "$user" --noexpiry >/dev/null
+decode() {
+  printf '%s' "$1" | base64 -d
 }
 
-set_disabled() {
-  local user="$1"
-  log "Deshabilitando cuenta: $user"
-  samba-tool user disable "$user" >/dev/null || true
-}
+# Los registros del escenario se almacenan codificados para evitar revelar
+# accidentalmente la respuesta durante la preparación del laboratorio.
+# No constituyen un mecanismo de seguridad ni pretenden impedir su inspección.
+USER_RECORDS=(
+  'YWxpY2UuYWRtaW58VGVsdm9yYS1BbGljZS1QMDQhMjAyNnwwfDA='
+  'Ym9iLm9wc3xUZWx2b3JhLUJvYi1QMDQhMjAyNnwwfDA='
+  'Y2FybGEubmV0fFRlbHZvcmEtQ2FybGEtUDA0ITIwMjZ8MHww'
+  'c3ZjX2JhY2t1cHxUZWx2b3JhLUJhY2t1cC1QMDQhMjAyNnwxfDA='
+  'c3ZjX2xlZ2FjeXxUZWx2b3JhLUxlZ2FjeS1QMDQhMjAyNnwxfDA='
+  'dmVuZG9yX25vY3xUZWx2b3JhLVZlbmRvci1QMDQhMjAyNnwwfDA='
+  'YnJlYWtnbGFzczAxfFRlbHZvcmEtQnJlYWtHbGFzcy1QMDQhMjAyNnwxfDA='
+  'Zm9ybWVyLmNvbnRyYWN0b3J8VGVsdm9yYS1Gb3JtZXItUDA0ITIwMjZ8MHwx'
+)
 
-# -----------------------------------------------------------------------------
-# Identidades del escenario P04.2
-# -----------------------------------------------------------------------------
+GROUP_RECORDS=(
+  'U2VydmVyIEFkbWlucw=='
+  'TmV0d29yayBPcGVyYXRvcnM='
+  'Tk9DIFZlbmRvcnM='
+  'UmVtb3RlIEFjY2VzcyBVc2Vycw=='
+)
 
-ensure_user "alice.admin"       'Telvora-Alice-P04!2026'
-ensure_user "bob.ops"           'Telvora-Bob-P04!2026'
-ensure_user "carla.net"         'Telvora-Carla-P04!2026'
-ensure_user "svc_backup"        'Telvora-Backup-P04!2026'
-ensure_user "svc_legacy"        'Telvora-Legacy-P04!2026'
-ensure_user "vendor_noc"        'Telvora-Vendor-P04!2026'
-ensure_user "breakglass01"      'Telvora-BreakGlass-P04!2026'
-ensure_user "former.contractor" 'Telvora-Former-P04!2026'
+MEMBERSHIP_RECORDS=(
+  'RG9tYWluIEFkbWluc3xhbGljZS5hZG1pbg=='
+  'RG9tYWluIEFkbWluc3xTZXJ2ZXIgQWRtaW5z'
+  'RG9tYWluIEFkbWluc3xicmVha2dsYXNzMDE='
+  'U2VydmVyIEFkbWluc3xib2Iub3Bz'
+  'U2VydmVyIEFkbWluc3xzdmNfbGVnYWN5'
+  'TmV0d29yayBPcGVyYXRvcnN8Y2FybGEubmV0'
+  'QmFja3VwIE9wZXJhdG9yc3xzdmNfYmFja3Vw'
+  'UmVtb3RlIEFjY2VzcyBVc2Vyc3xOT0MgVmVuZG9ycw=='
+  'Tk9DIFZlbmRvcnN8dmVuZG9yX25vYw=='
+  'Tk9DIFZlbmRvcnN8Zm9ybWVyLmNvbnRyYWN0b3I='
+)
 
-# -----------------------------------------------------------------------------
-# Grupos adicionales del escenario
-# -----------------------------------------------------------------------------
+log "Validando entorno del laboratorio..."
+log "Preparando escenario IAM..."
 
-ensure_group "Server Admins"
-ensure_group "Network Operators"
-ensure_group "NOC Vendors"
-ensure_group "Remote Access Users"
+for record in "${USER_RECORDS[@]}"; do
+  IFS='|' read -r user password noexpiry disabled <<<"$(decode "$record")"
+  ensure_user "$user" "$password"
 
-# -----------------------------------------------------------------------------
-# Membresías
-# -----------------------------------------------------------------------------
+  if [[ "$noexpiry" == "1" ]]; then
+    samba-tool user setexpiry "$user" --noexpiry >/dev/null
+  fi
 
-ensure_member "Domain Admins" "alice.admin"
-ensure_member "Domain Admins" "Server Admins"
-ensure_member "Domain Admins" "breakglass01"
+  if [[ "$disabled" == "1" ]]; then
+    samba-tool user disable "$user" >/dev/null 2>&1 || true
+  fi
+done
 
-ensure_member "Server Admins" "bob.ops"
-ensure_member "Server Admins" "svc_legacy"
+for record in "${GROUP_RECORDS[@]}"; do
+  group="$(decode "$record")"
+  ensure_group "$group"
+done
 
-ensure_member "Network Operators" "carla.net"
-ensure_member "Backup Operators" "svc_backup"
+for record in "${MEMBERSHIP_RECORDS[@]}"; do
+  IFS='|' read -r group member <<<"$(decode "$record")"
+  ensure_member "$group" "$member"
+done
 
-ensure_member "Remote Access Users" "NOC Vendors"
-ensure_member "NOC Vendors" "vendor_noc"
-ensure_member "NOC Vendors" "former.contractor"
-
-# -----------------------------------------------------------------------------
-# Propiedades específicas del escenario
-# -----------------------------------------------------------------------------
-
-set_noexpiry "svc_backup"
-set_noexpiry "svc_legacy"
-set_noexpiry "breakglass01"
-
-set_disabled "former.contractor"
-
-printf '\n'
-log "Preparación completada."
-log "El script puede volver a ejecutarse: no recreará usuarios, grupos ni membresías existentes."
-printf '\n'
-log "Comprobaciones básicas sugeridas:"
-printf '%s\n' \
-  "  samba-tool user list" \
-  "  samba-tool group list" \
-  "  samba-tool group listmembers 'Domain Admins'" \
-  "  samba-tool group listmembers 'Server Admins'" \
-  "  samba-tool group listmembers 'NOC Vendors'"
+log "Escenario preparado correctamente."
+log "Ya puedes continuar con el enunciado del laboratorio."
