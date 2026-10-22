@@ -5,7 +5,6 @@ $ErrorActionPreference = 'Stop'
 
 $TargetDomain = 'telvora.lab'
 $TargetNetBIOS = 'TELVORA'
-$TargetDC = 'ad01.telvora.lab'
 
 function Write-LabMessage {
     param([Parameter(Mandatory)][string]$Message)
@@ -139,10 +138,6 @@ if (-not $computerSystem.PartOfDomain -or $computerSystem.Domain.ToLowerInvarian
 
 if ($env:USERDOMAIN.ToUpperInvariant() -ne $TargetNetBIOS) {
     Stop-Lab 'Inicia sesion en MEMBER01 con la cuenta administrativa del dominio TELVORA.'
-}
-
-if (-not (Test-NetConnection -ComputerName $TargetDC -Port 389 -InformationLevel Quiet)) {
-    Stop-Lab 'No hay conectividad LDAP con el controlador de dominio del laboratorio.'
 }
 
 $ScenarioUsers = @(
