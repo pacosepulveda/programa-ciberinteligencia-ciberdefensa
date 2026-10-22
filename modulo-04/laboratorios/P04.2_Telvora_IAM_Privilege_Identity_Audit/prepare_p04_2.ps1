@@ -148,24 +148,8 @@ if (-not (Test-IsAdministrator)) {
 
 Write-LabMessage 'Validando MEMBER01 y los componentes de administración...'
 
-try {
-    Import-Module ServerManager -ErrorAction Stop
-    $rsat = Get-WindowsFeature -Name RSAT-AD-Tools
-
-    if ($null -eq $rsat) {
-        Stop-Lab 'No se encuentra la característica RSAT-AD-Tools en este sistema.'
-    }
-
-    if ($rsat.InstallState -ne 'Installed') {
-        Write-LabMessage 'Instalando las herramientas de administración necesarias...'
-        $result = Install-WindowsFeature -Name RSAT-AD-Tools -IncludeAllSubFeature
-        if (-not $result.Success) {
-            Stop-Lab 'No se pudieron instalar las herramientas RSAT de Active Directory.'
-        }
-    }
-}
-catch {
-    Stop-Lab 'No se pudieron validar o instalar las herramientas RSAT de Active Directory.'
+if (-not (Test-Path "$env:SystemRoot\System32\dsa.msc")) {
+    Stop-Lab 'Active Directory Users and Computers (dsa.msc) no está instalado. Utiliza la imagen MEMBER01 preparada para el laboratorio.'
 }
 
 $computerSystem = Get-CimInstance Win32_ComputerSystem
@@ -241,10 +225,6 @@ try {
 }
 catch {
     Stop-Lab 'No se pudo completar la preparación del escenario. Verifica que la sesión tenga permisos administrativos en TELVORA.'
-}
-
-if (-not (Test-Path "$env:SystemRoot\System32\dsa.msc")) {
-    Stop-Lab 'RSAT se instaló, pero no se encuentra Active Directory Users and Computers (dsa.msc).'
 }
 
 Write-LabMessage 'Escenario preparado correctamente.'
