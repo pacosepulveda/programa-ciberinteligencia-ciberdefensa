@@ -1,68 +1,152 @@
 # P04.2 — IAM Privilege & Identity Audit
 ## Standing privilege, group nesting y gobierno técnico de identidad
 
-**Objetivo:** auditar identidades y privilegios de TELVORA y diseñar un target state que reduzca exposición permanente.
+**Objetivo:** auditar identidades y privilegios reales en el dominio Samba AD de TELVORA y diseñar un target state que reduzca la exposición permanente.
 
-Esta práctica no consiste en explotar Active Directory. Se trabaja **gobierno técnico de identidad, privilegios efectivos y evidencia**.
+Esta práctica no consiste en explotar Active Directory. Se trabaja **gobierno técnico de identidad, privilegio efectivo, mínimo privilegio y evidencia**.
 
-## 1. Modalidades
+---
 
-### Modalidad principal — AD01
+## 1. Preparación del escenario
 
-Si `AD01` está disponible, realiza la revisión sobre el dominio de laboratorio `telvora.test` usando herramientas de consulta del entorno Samba AD/LDAP proporcionadas por el instructor.
+En `AD01`, actualiza o clona el repositorio del curso y entra en el directorio del laboratorio:
 
-No debes modificar cuentas, grupos ni contraseñas durante la fase de auditoría.
-
-### Modalidad de respaldo — Evidence Pack
-
-Si no tienes acceso directo a `AD01`, utiliza los CSV de [`evidence/`](evidence/). Representan una exportación controlada del mismo escenario y permiten completar el análisis sin inventar datos.
-
-## 2. Alcance
-
-La revisión incluye identidades similares a:
-
-```text
-alice.admin
-bob.ops
-carla.net
-svc_backup
-svc_legacy
-vendor_noc
-breakglass01
-former.contractor
+```bash
+git clone https://github.com/pacosepulveda/programa-ciberinteligencia-ciberdefensa.git
+cd programa-ciberinteligencia-ciberdefensa/modulo-04/laboratorios/P04.2_Telvora_IAM_Privilege_Identity_Audit
 ```
 
-Y grupos como:
+Si ya tienes el repositorio:
 
-```text
-Domain Admins
-Server Admins
-Network Operators
-NOC Vendors
-Backup Operators
-Remote Access Users
+```bash
+cd ~/programa-ciberinteligencia-ciberdefensa
+git pull
+cd modulo-04/laboratorios/P04.2_Telvora_IAM_Privilege_Identity_Audit
 ```
 
-## 3. Inventario de privilegios
+Prepara el escenario:
 
-Identifica:
+```bash
+sudo bash prepare_p04_2_samba_ad.sh
+```
+
+El script solo prepara los objetos necesarios para la práctica. A partir de este punto, **no debes modificar cuentas, grupos ni contraseñas durante la fase de auditoría**.
+
+Comprueba que estás trabajando sobre el dominio correcto:
+
+```bash
+sudo samba-tool domain info 127.0.0.1
+```
+
+El dominio esperado es:
+
+```text
+telvora.lab
+```
+
+---
+
+## 2. Investigación inicial
+
+Tu objetivo es descubrir la estructura IAM del dominio, no recibirla ya resuelta.
+
+Empieza por enumerar usuarios y grupos:
+
+```bash
+sudo samba-tool user list
+sudo samba-tool group list
+```
+
+Investiga los grupos que puedan otorgar capacidades administrativas, operativas, remotas o de backup.
+
+Para revisar los miembros directos de un grupo:
+
+```bash
+sudo samba-tool group listmembers "NOMBRE DEL GRUPO"
+```
+
+No te limites a una única profundidad. Si un grupo contiene a otro grupo, continúa la investigación hasta llegar a identidades finales.
+
+Para conocer los grupos directos de una identidad:
+
+```bash
+sudo samba-tool user getgroups "USUARIO"
+```
+
+---
+
+## 3. Revisar propiedades de las cuentas
+
+Para inspeccionar un objeto de usuario:
+
+```bash
+sudo samba-tool user show "USUARIO"
+```
+
+Para reducir la salida a atributos útiles:
+
+```bash
+sudo samba-tool user show "USUARIO" \
+  --attributes=sAMAccountName,userAccountControl,accountExpires,memberOf
+```
+
+Presta especial atención a `userAccountControl`.
+
+Algunos flags relevantes son:
+
+```text
+0x0002  ACCOUNTDISABLE
+0x0200  NORMAL_ACCOUNT
+0x10000 DONT_EXPIRE_PASSWORD
+```
+
+Ejemplo de interpretación:
+
+```text
+512    = cuenta normal
+514    = cuenta normal deshabilitada
+66048  = cuenta normal + password no expira
+66050  = cuenta normal deshabilitada + password no expira
+```
+
+No clasifiques una cuenta únicamente por su nombre. Combina:
+
+```text
+propiedades de la cuenta
++
+memberships
++
+privilegio efectivo
++
+función aparente
+```
+
+---
+
+## 4. Construir el mapa de privilegios
+
+Identifica al menos:
 
 - miembros directos de grupos privilegiados;
-- privilegios indirectos por group nesting;
-- cuentas deshabilitadas/obsoletas que conservan membership;
-- service accounts con credenciales de larga duración;
+- privilegios indirectos por **group nesting**;
+- cuentas deshabilitadas que conservan memberships;
+- identidades no humanas con credenciales de larga duración;
 - privilegio administrativo permanente;
-- break-glass accounts;
-- cuentas de terceros/proveedores;
-- restricciones temporales o ausencia de expiración.
+- posibles cuentas de emergencia;
+- posibles cuentas de terceros/proveedores;
+- grupos que conceden acceso remoto u operativo.
 
-Construye:
+Construye una tabla como esta:
 
-| Identity | Type | Privilege path | Direct/indirect | Standing? | Justification known? | Risk |
+| Identity | Type | Privilege path | Direct/indirect | Enabled? | Password expires? | Risk |
 |---|---|---|---|---|---|---|
 | | | | | | | |
 
-## 4. Cinco findings
+Importante: diferencia entre **membership directo** y **privilegio efectivo**.
+
+---
+
+## 5. Cinco findings
 
 Documenta al menos cinco hallazgos:
 
@@ -77,11 +161,15 @@ How to validate remediation:
 Residual risk:
 ```
 
-No se acepta como hallazgo una hipótesis sin evidencia.
+No se acepta como hallazgo una hipótesis sin evidencia obtenida del dominio.
 
-## 5. Target state
+Si una afirmación de gobierno no puede demostrarse técnicamente —por ejemplo, que una identidad carece de owner, MFA, aprobación o revisión periódica— debe redactarse como **pregunta de auditoría o evidencia pendiente**, no como hecho.
 
-Para cada rol diseña un modelo objetivo:
+---
+
+## 6. Diseñar el target state
+
+A partir de los problemas encontrados, diseña un modelo objetivo para funciones como:
 
 ```text
 Domain administration
@@ -98,11 +186,22 @@ Incluye:
 |---|---|---|---|---|---|---|---|
 | | | | | | | | |
 
-Puedes proponer, cuando sea razonable, controles como JIT/JEA/PAM, separación de cuentas administrativas, gMSA/workload identity, expiración de acceso de terceros, MFA, dispositivos administrativos dedicados y revisiones periódicas.
+Puedes proponer, cuando sea razonable:
+
+- JIT/JEA/PAM;
+- separación de cuentas administrativas;
+- gMSA o identidad gestionada para workloads;
+- expiración de accesos de terceros;
+- MFA resistente a phishing;
+- dispositivos o redes administrativas dedicadas;
+- logging de privilegios;
+- revisiones periódicas.
 
 No basta con nombrar una tecnología: explica qué riesgo reduce.
 
-## 6. Prioriza
+---
+
+## 7. Prioriza
 
 Solo puedes aplicar **tres cambios esta semana**.
 
@@ -117,23 +216,29 @@ abuse potential
 
 No se exige una fórmula matemática.
 
-## 7. Debrief
+---
+
+## 8. Debrief
 
 1. ¿Por qué el group nesting puede ocultar privilegio efectivo?
-2. ¿Por qué una cuenta deshabilitada sigue siendo un hallazgo si permanece en grupos críticos?
+2. ¿Por qué una cuenta deshabilitada sigue siendo un hallazgo si permanece en grupos con acceso?
 3. ¿Qué diferencia hay entre una service account necesaria y una service account bien gobernada?
-4. ¿Por qué `PasswordNeverExpires` es especialmente sensible en identidades no humanas?
+4. ¿Por qué `DONT_EXPIRE_PASSWORD` es especialmente sensible en identidades no humanas?
 5. ¿Qué controles compensatorios exige una break-glass account?
 6. ¿Por qué eliminar standing privilege reduce exposición incluso si la autenticación ya es fuerte?
-7. ¿Qué evidencias guardarías para una auditoría de accesos privilegiados?
+7. ¿Qué aspectos importantes del gobierno IAM no puedes demostrar únicamente mirando Active Directory?
+8. ¿Qué evidencias adicionales pedirías para una auditoría completa de accesos privilegiados?
+
+---
 
 ## Entregable
 
-`iam-audit.md`, máximo 2 páginas, con:
+Crea `iam-audit.md`, máximo 2 páginas, con:
 
-- mapa de privilegios;
-- cinco findings;
+- mapa de privilegios efectivo;
+- cinco findings sustentados por evidencia;
 - tres acciones priorizadas;
 - target state;
 - validación propuesta;
-- riesgo residual.
+- riesgo residual;
+- evidencias de gobierno que faltaría solicitar fuera de AD.
