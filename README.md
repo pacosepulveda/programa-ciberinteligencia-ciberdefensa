@@ -35,6 +35,10 @@ modulo-04/
 modulo-05/
 ├── README.md
 └── laboratorios/
+
+modulo-06/
+├── README.md
+└── laboratorios/
 ```
 
 Cada módulo contiene únicamente material destinado al alumno. Las guías de instructor, soluciones y materiales internos no forman parte de este repositorio.
@@ -66,6 +70,15 @@ Cada módulo contiene únicamente material destinado al alumno. Las guías de in
 - [Laboratorios P05.1 y P05.2](modulo-05/laboratorios/README.md)
 - [P05.1 — Identity & Phishing Incident](modulo-05/laboratorios/P05.1_Telvora_Identity_Phishing_Incident/ENUNCIADO.md)
 - [P05.2 — Insider & Data Breach Investigation](modulo-05/laboratorios/P05.2_Telvora_Insider_Data_Breach_Investigation/ENUNCIADO.md)
+
+### Módulo 6 — Ciberinteligencia, OSINT y SOCMINT
+- [Índice del módulo](modulo-06/README.md)
+- [Laboratorios del Módulo 6](modulo-06/laboratorios/README.md)
+- [P06.0 — Investigator OPSEC Exposure Assessment](modulo-06/laboratorios/P06.0_Investigator_OPSEC_Exposure_Assessment/ENUNCIADO.md)
+- [P06.1 — External Surface Intelligence](modulo-06/laboratorios/P06.1_External_Surface_Intelligence/ENUNCIADO.md)
+- [P06.2 — Multimedia Verification & Geolocation](modulo-06/laboratorios/P06.2_Multimedia_Verification_Geolocation/ENUNCIADO.md)
+- [P06.3 — Real CTI Investigation: AA25-239A](modulo-06/laboratorios/P06.3_Real_CTI_Investigation_AA25-239A/ENUNCIADO.md)
+- [P06.4 — MITRE ATT&CK Evidence Mapping](modulo-06/laboratorios/P06.4_MITRE_ATTACK_Evidence_Mapping/ENUNCIADO.md)
 
 ## Uso del material
 
