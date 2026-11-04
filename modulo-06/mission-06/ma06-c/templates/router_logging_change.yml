@@ -1,0 +1,25 @@
+title: Telvora Router Logging Configuration Change
+id: 6cff53fa-f395-4517-b1c6-fb2db97577ef
+status: experimental
+description: Detects a recorded logging configuration change on simulated TELVORA routers
+references:
+    - https://attack.mitre.org/
+author: TELVORA Training
+date: 2026-11-04
+logsource:
+    category: network_device
+    product: telvora_simulated
+detection:
+    selection:
+        event_type: logging_change
+        outcome: success
+    condition: selection
+fields:
+    - timestamp
+    - asset_id
+    - user
+    - session_id
+    - change_id
+falsepositives:
+    - Authorized router maintenance and monitoring changes
+level: medium

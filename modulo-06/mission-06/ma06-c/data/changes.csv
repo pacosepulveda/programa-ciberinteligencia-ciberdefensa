@@ -1,0 +1,4 @@
+change_id,asset_id,approved_user,window_start_utc,window_end_utc,authorized_actions,status
+CH-101,BR-EDGE-01,netops-a,2026-10-27T10:00:00Z,2026-10-27T10:30:00Z,config_export;logging_change,approved
+CH-102,BR-EDGE-02,netops-b,2026-10-27T14:00:00Z,2026-10-27T14:30:00Z,config_export,approved
+CH-103,BR-EDGE-01,netops-c,2026-10-27T16:55:00Z,2026-10-27T17:10:00Z,config_export;logging_change,cancelled

@@ -1,0 +1,5 @@
+src_ip,source_type,approved_for_management
+192.0.2.10,bastion,yes
+192.0.2.11,bastion,yes
+198.51.100.66,unknown,no
+198.51.100.67,unknown,no

@@ -19,17 +19,17 @@ El módulo aborda requisitos de inteligencia, OPSEC del investigador, OSINT téc
 
 ## Misiones autónomas
 
-- [Índice y materiales de las misiones](mission-06/README.md)
-- [MA06.A — Operación Rumor](mission-06/MA06-A_Rumor_y_Verificacion.md)
-- [MA06.B — CTI y detección](mission-06/MA06-B_CTI_Relevancia_y_Deteccion.md)
-- [MA06.C — Intelligence Brief](mission-06/MA06-C_Intelligence_Brief.md)
+- [Índice de misiones](mission-06/README.md)
+- [MA06.A — External Intelligence Watch](mission-06/MA06-A_External_Intelligence_Watch.md)
+- [MA06.B — Digital Evidence Investigation](mission-06/MA06-B_Digital_Evidence_Investigation.md)
+- [MA06.C — Threat Intelligence to Detection](mission-06/MA06-C_Threat_Intelligence_to_Detection.md)
 
 ## Alcance y autorización
 
 Los ejercicios se realizarán exclusivamente sobre:
 
 - sistemas y máquinas virtuales del curso;
-- `cloudsecurityinpractice.com` y sus subdominios, autorizados por el instructor para investigación pasiva;
+- cloudsecurityinpractice.com y sus subdominios expresamente autorizados para investigación pasiva;
 - fuentes públicas indicadas en los enunciados;
 - datasets e informes públicos de referencia.
 

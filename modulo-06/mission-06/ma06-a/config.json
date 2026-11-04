@@ -1,0 +1,19 @@
+{
+  "scope": "cloudsecurityinpractice.com",
+  "authorized_names": [
+    "cloudsecurityinpractice.com",
+    "www.cloudsecurityinpractice.com",
+    "training.cloudsecurityinpractice.com",
+    "tabletop.cloudsecurityinpractice.com"
+  ],
+  "record_types": [
+    "A",
+    "AAAA",
+    "MX",
+    "NS",
+    "CNAME"
+  ],
+  "ct_enabled": true,
+  "max_requests": 20,
+  "timeout_seconds": 8
+}

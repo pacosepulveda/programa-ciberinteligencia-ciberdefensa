@@ -1,0 +1,92 @@
+{
+  "case": "TELVORA_SIM",
+  "synthetic": true,
+  "scope": "telvora.example",
+  "captured_at": "2026-11-11T08:00:00Z",
+  "provenance": {
+    "source": "synthetic training snapshot T1",
+    "comment": "Las IP pertenecen a rangos de documentación."
+  },
+  "dns": {
+    "telvora.example": {
+      "MX": {
+        "status": "ok",
+        "values": [
+          "10 mx-b.mail.telvora.example"
+        ],
+        "observed_at": "2026-11-11T08:00:00Z"
+      },
+      "NS": {
+        "status": "ok",
+        "values": [
+          "ns2.telvora.example",
+          "ns1.telvora.example",
+          "ns2.telvora.example"
+        ],
+        "observed_at": "2026-11-11T08:00:00Z"
+      }
+    },
+    "portal.telvora.example": {
+      "A": {
+        "status": "ok",
+        "values": [
+          "203.0.113.20"
+        ],
+        "observed_at": "2026-11-11T08:00:00Z"
+      }
+    },
+    "www.telvora.example": {
+      "CNAME": {
+        "status": "ok",
+        "values": [
+          "portal.telvora.example"
+        ],
+        "observed_at": "2026-11-11T08:00:00Z"
+      }
+    },
+    "api.telvora.example": {
+      "A": {
+        "status": "timeout",
+        "values": [],
+        "observed_at": "2026-11-11T08:00:00Z"
+      }
+    },
+    "monitor.telvora.example": {
+      "A": {
+        "status": "ok",
+        "values": [
+          "203.0.113.50"
+        ],
+        "observed_at": "2026-11-11T08:00:00Z"
+      }
+    },
+    "preprod.telvora.example": {
+      "A": {
+        "status": "nxdomain",
+        "values": [],
+        "observed_at": "2026-11-11T08:00:00Z"
+      }
+    }
+  },
+  "ct": [
+    {
+      "id": "CT-01",
+      "dns_names": [
+        "telvora.example",
+        "portal.telvora.example"
+      ],
+      "not_before": "2026-10-01T12:00:00Z",
+      "observed_at": "2026-11-11T08:00:00Z"
+    },
+    {
+      "id": "CT-02",
+      "dns_names": [
+        "preprod.telvora.example",
+        "telvora.example",
+        "preprod.telvora.example"
+      ],
+      "not_before": "2026-11-07T14:00:00Z",
+      "observed_at": "2026-11-11T08:00:00Z"
+    }
+  ]
+}

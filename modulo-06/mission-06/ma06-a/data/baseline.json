@@ -1,0 +1,81 @@
+{
+  "case": "TELVORA_SIM",
+  "synthetic": true,
+  "scope": "telvora.example",
+  "captured_at": "2026-11-04T08:00:00Z",
+  "provenance": {
+    "source": "synthetic training snapshot T0",
+    "comment": "No realizar consultas externas a .example"
+  },
+  "dns": {
+    "telvora.example": {
+      "MX": {
+        "status": "ok",
+        "values": [
+          "10 mx-a.mail.telvora.example"
+        ],
+        "observed_at": "2026-11-04T08:00:00Z"
+      },
+      "NS": {
+        "status": "ok",
+        "values": [
+          "ns1.telvora.example",
+          "ns2.telvora.example"
+        ],
+        "observed_at": "2026-11-04T08:00:00Z"
+      }
+    },
+    "portal.telvora.example": {
+      "A": {
+        "status": "ok",
+        "values": [
+          "198.51.100.20"
+        ],
+        "observed_at": "2026-11-04T08:00:00Z"
+      }
+    },
+    "www.telvora.example": {
+      "CNAME": {
+        "status": "ok",
+        "values": [
+          "portal.telvora.example"
+        ],
+        "observed_at": "2026-11-04T08:00:00Z"
+      }
+    },
+    "api.telvora.example": {
+      "A": {
+        "status": "ok",
+        "values": [
+          "198.51.100.30"
+        ],
+        "observed_at": "2026-11-04T08:00:00Z"
+      }
+    },
+    "monitor.telvora.example": {
+      "A": {
+        "status": "nxdomain",
+        "values": [],
+        "observed_at": "2026-11-04T08:00:00Z"
+      }
+    },
+    "preprod.telvora.example": {
+      "A": {
+        "status": "nxdomain",
+        "values": [],
+        "observed_at": "2026-11-04T08:00:00Z"
+      }
+    }
+  },
+  "ct": [
+    {
+      "id": "CT-01",
+      "dns_names": [
+        "telvora.example",
+        "portal.telvora.example"
+      ],
+      "not_before": "2026-10-01T12:00:00Z",
+      "observed_at": "2026-11-04T08:00:00Z"
+    }
+  ]
+}

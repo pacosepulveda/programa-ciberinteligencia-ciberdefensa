@@ -1,0 +1,13 @@
+{
+  "source_url": "https://www.cisa.gov/news-events/cybersecurity-advisories/aa25-239a",
+  "behaviours": [
+    {
+      "behaviour_id": "B01",
+      "source_section": "",
+      "observed_behaviour": "",
+      "evidence_note": "",
+      "attack_technique_id": "",
+      "confidence": ""
+    }
+  ]
+}

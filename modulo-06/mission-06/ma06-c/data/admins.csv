@@ -1,0 +1,7 @@
+user,role,account_status
+netops-a,network_admin,active
+netops-b,network_admin,active
+netops-c,network_admin,active
+svc_backup,service_account,active
+svc_shadow,unknown_to_inventory,unknown
+temp-admin,temporary_account,unverified

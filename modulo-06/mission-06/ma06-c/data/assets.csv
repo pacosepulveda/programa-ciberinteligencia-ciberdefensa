@@ -1,0 +1,5 @@
+asset_id,role,criticality,environment
+BR-EDGE-01,edge_router,high,telvora_simulated
+BR-EDGE-02,edge_router,high,telvora_simulated
+BR-EDGE-03,branch_router,medium,telvora_simulated
+PE-CORE-01,provider_edge,critical,telvora_simulated

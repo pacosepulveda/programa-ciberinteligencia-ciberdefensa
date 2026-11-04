@@ -1,0 +1,39 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "A",
+        "source_url": "",
+        "map_source_url": "",
+        "evidence": "",
+        "confidence": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "B",
+        "source_url": "",
+        "map_source_url": "",
+        "evidence": "",
+        "confidence": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          null,
+          null
+        ]
+      }
+    }
+  ]
+}

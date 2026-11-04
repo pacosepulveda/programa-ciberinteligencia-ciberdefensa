@@ -1,7 +1,0 @@
-asset_id,tipo,funcion,exposicion_declarada,telemetria_declarada,dependencias_o_terceros,estado_de_verificacion
-PORTAL-CLIENTES,aplicacion_web,Portal externo de clientes,Internet,"Metricas HTTP y disponibilidad; acceso limitado a logs raw",IDP-01,parcial
-IDP-01,servicio_identidad,Autenticacion de aplicaciones corporativas,Interna,"Alertas de disponibilidad; autenticacion no completamente correlacionada",PORTAL-CLIENTES,parcial
-BR-EDGE-01,router_borde,Conectividad de red y relaciones de interconexion,Perimetro,"Sin exportacion continua de logs al agregador",CPE-GW-04,pendiente
-CPE-GW-04,equipo_red_cliente,Conectividad con un tercero,Interconexion,"Telemetria gestionada por tercero; acceso no acreditado",BR-EDGE-01,pendiente
-AGG-LOG-01,plataforma_logging,Agregacion central de logs,Interna,"Recibe portal y algunos eventos de identidad; no todos los routers",PORTAL-CLIENTES;IDP-01,parcial
-API-ORDERS-01,servicio_backend,Procesamiento interno de solicitudes,Interna_segun_inventario,"Cobertura no documentada",PORTAL-CLIENTES,pendiente

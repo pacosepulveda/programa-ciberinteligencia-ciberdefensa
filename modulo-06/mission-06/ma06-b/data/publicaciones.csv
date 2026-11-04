@@ -1,0 +1,6 @@
+post_id,timestamp_utc,canal_simulado,texto,cita_post,imagen
+PUB-01,2026-11-03T08:21:00Z,foro_ficticio,"Circula una imagen de una torre. Aseguran que es de la emergencia de esta semana en Madrid.",,A
+PUB-02,2026-11-03T10:02:00Z,feed_ficticio,"Imagen A: parece confirmar intervención de telecomunicaciones en Madrid. ¿Alguien conoce el lugar?",PUB-01,A
+PUB-03,2026-11-03T11:43:00Z,foro_ficticio,"Otra foto supuestamente de la misma reparación, fechada hoy y tomada desde otro ángulo.",,B
+PUB-04,2026-11-03T13:12:00Z,feed_ficticio,"Dos fuentes independientes confirman la emergencia; comparto las pruebas.",PUB-02;PUB-03,A;B
+PUB-05,2026-11-03T16:25:00Z,boletin_ficticio,"No contamos con evidencia documental que vincule las imágenes a un incidente real en TELVORA.",PUB-04,
