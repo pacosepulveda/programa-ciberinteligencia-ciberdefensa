@@ -2,8 +2,6 @@
 
 Material para alumnos del **Programa Avanzado de Ciberinteligencia y Ciberdefensa**.
 
-El repositorio se publica de forma progresiva: los materiales se irán incorporando a medida que avance el programa.
-
 ## Estructura
 
 ```text
@@ -38,12 +36,12 @@ modulo-05/
 
 modulo-06/
 ├── README.md
-└── laboratorios/
+├── laboratorios/
+├── mission-06/
+└── osint-retos-fuentes-abiertas/
 ```
 
-Cada módulo contiene únicamente material destinado al alumno. Las guías de instructor, soluciones y materiales internos no forman parte de este repositorio.
-
-## Material publicado
+## Material por módulo
 
 ### Módulo 1 — Fundamentos de Ciberseguridad, Ciberinteligencia y Ciberdefensa
 - [Enunciados de laboratorio](modulo-01/laboratorios/M01_Enunciados_Laboratorios.md)
@@ -58,7 +56,6 @@ Cada módulo contiene únicamente material destinado al alumno. Las guías de in
 - [Microchallenge 3.A — Architecture under pressure](modulo-03/microchallenge-3A/ENUNCIADO.md)
 - [Laboratorios P03.1, P03.2 y P03.3](modulo-03/laboratorios/README.md)
 - [Mission 03 — Architecture Defence Pack](modulo-03/mission-03/ENUNCIADO.md)
-- Presentación prevista: `modulo-03/presentacion/M3_Arquitecturas_Ciberseguridad.pdf`
 
 ### Módulo 4 — Ciberseguridad del Dato y Tecnologías Disruptivas
 - [Índice del módulo](modulo-04/README.md)
@@ -73,15 +70,10 @@ Cada módulo contiene únicamente material destinado al alumno. Las guías de in
 
 ### Módulo 6 — Ciberinteligencia, OSINT y SOCMINT
 - [Índice del módulo](modulo-06/README.md)
-- [Laboratorios del Módulo 6](modulo-06/laboratorios/README.md)
-- [P06.0 — Investigator OPSEC Exposure Assessment](modulo-06/laboratorios/P06.0_Investigator_OPSEC_Exposure_Assessment/ENUNCIADO.md)
-- [P06.1 — External Surface Intelligence](modulo-06/laboratorios/P06.1_External_Surface_Intelligence/ENUNCIADO.md)
-- [P06.2 — Multimedia Verification & Geolocation](modulo-06/laboratorios/P06.2_Multimedia_Verification_Geolocation/ENUNCIADO.md)
-- [P06.3 — Real CTI Investigation: AA25-239A](modulo-06/laboratorios/P06.3_Real_CTI_Investigation_AA25-239A/ENUNCIADO.md)
-- [P06.4 — MITRE ATT&CK Evidence Mapping](modulo-06/laboratorios/P06.4_MITRE_ATTACK_Evidence_Mapping/ENUNCIADO.md)
+- [Laboratorios P06.0–P06.4](modulo-06/laboratorios/README.md)
+- [Retos OSINT en fuentes abiertas](modulo-06/osint-retos-fuentes-abiertas/README.md)
+- [Misiones autónomas MA06.A–MA06.C](modulo-06/mission-06/README.md)
 
-## Uso del material
+## Alcance de los ejercicios
 
-Los ejercicios técnicos deben realizarse exclusivamente dentro del **Telvora Cyber Range**, **Telvora Incident Simulation Platform** y de los entornos expresamente autorizados para el curso.
-
-> El contenido del repositorio irá creciendo durante el programa. Que un módulo todavía no aparezca no significa que no forme parte del temario.
+Los ejercicios técnicos se realizarán exclusivamente sobre los entornos del curso y los objetivos expresamente autorizados o indicados en los enunciados. No se permite el acceso no autorizado ni la explotación de sistemas de terceros.
